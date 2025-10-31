@@ -1,0 +1,242 @@
+---
+import { Image } from 'astro:assets';
+import huanucoPortada from '../assets/imagenes/huanuco_portada.webp';
+---
+
+<section class="hero">
+    <div class="hero-background">
+        <Image 
+            src={huanucoPortada} 
+            alt="Huánuco" 
+            class="hero-image"
+            loading="eager"
+            quality={85}
+            format="webp"
+        />
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="grid-overlay"></div>
+    <div class="particles"></div>
+    <div class="hero-content">
+        <h1>Descubre Huánuco</h1>
+        <p>La región de los bosques andinos y la cuna de la historia peruana</p>
+        <a href="#explorar" class="btn-explore">Explorar Región</a>
+    </div>
+</section>
+
+<style>
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg, 
+        rgba(6, 78, 59, 0.5) 0%,
+        rgba(16, 185, 129, 0.3) 50%,
+        rgba(5, 150, 105, 0.4) 100%
+    );
+    z-index: 2;
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 5s ease-in-out infinite;
+    z-index: 3;
+}
+
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle, rgba(16, 185, 129, 0.6) 1px, transparent 1px),
+        radial-gradient(circle, rgba(52, 211, 153, 0.5) 1px, transparent 1px),
+        radial-gradient(circle, rgba(167, 243, 208, 0.4) 1px, transparent 1px);
+    background-size: 150px 150px, 200px 200px, 250px 250px;
+    background-position: 0 0, 40px 60px, 130px 270px;
+    animation: particleFloat 25s ease-in-out infinite;
+    z-index: 4;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    animation: fadeInUp 1s ease-out;
+    max-width: 900px;
+}
+
+.hero-content h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 
+        0 0 20px rgba(16, 185, 129, 0.7),
+        0 0 40px rgba(16, 185, 129, 0.4),
+        3px 3px 10px rgba(0, 0, 0, 0.8);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(to bottom, #ffffff, #d1fae5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.6));
+}
+
+.hero-content p {
+    font-size: 1.6rem;
+    margin-bottom: 3rem;
+    text-shadow: 
+        0 0 15px rgba(16, 185, 129, 0.5),
+        2px 2px 8px rgba(0, 0, 0, 0.9);
+    letter-spacing: 1.5px;
+    line-height: 1.6;
+    color: #f0fdf4;
+}
+
+.btn-explore {
+    position: relative;
+    display: inline-block;
+    padding: 1.3rem 3.5rem;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.4));
+    color: white;
+    text-decoration: none;
+    font-size: 1.15rem;
+    font-weight: 600;
+    border: 2px solid rgba(16, 185, 129, 0.8);
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 0 30px rgba(16, 185, 129, 0.4),
+        inset 0 0 20px rgba(16, 185, 129, 0.1),
+        0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-explore::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-explore:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.btn-explore:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(5, 150, 105, 0.6));
+    transform: translateY(-3px) scale(1.05);
+    border-color: rgba(52, 211, 153, 1);
+    box-shadow: 
+        0 0 50px rgba(16, 185, 129, 0.8),
+        0 12px 30px rgba(0, 0, 0, 0.4),
+        inset 0 0 30px rgba(16, 185, 129, 0.2);
+}
+
+.btn-explore span {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes gridPulse {
+    0%, 100% { 
+        opacity: 0.4; 
+        background-size: 60px 60px;
+    }
+    50% { 
+        opacity: 0.7;
+        background-size: 65px 65px;
+    }
+}
+
+@keyframes particleFloat {
+    0%, 100% { 
+        background-position: 0 0, 40px 60px, 130px 270px;
+        opacity: 0.6;
+    }
+    33% { 
+        background-position: 100px 100px, 150px 180px, 250px 350px;
+        opacity: 0.8;
+    }
+    66% { 
+        background-position: -50px 200px, 80px 300px, 180px 150px;
+        opacity: 0.7;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 3rem;
+        letter-spacing: 2px;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+
+    .btn-explore {
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+    }
+}
+</style>

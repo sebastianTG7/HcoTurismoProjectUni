@@ -1,0 +1,1244 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Turismo en Huánuco - Destinos Imperdibles">
+	<section class="hero-turismo">
+		<div class="hero-video-overlay"></div>
+		<div class="parallax-bg"></div>
+		<div class="hero-content">
+			<h1 class="animated-title">Descubre Huánuco</h1>
+			<p class="animated-subtitle">Donde los Andes encuentran la Amazonía</p>
+			<div class="hero-stats">
+				<div class="stat-item">
+					<span class="stat-number">15+</span>
+					<span class="stat-label">Destinos Turísticos</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">3</span>
+					<span class="stat-label">Zonas Climáticas</span>
+				</div>
+				<div class="stat-item">
+					<span class="stat-number">2000+</span>
+					<span class="stat-label">Años de Historia</span>
+				</div>
+			</div>
+		</div>
+		<div class="scroll-indicator">
+			<span>Explora</span>
+			<div class="arrow-down"></div>
+		</div>
+	</section>
+
+	<!-- Intro Section -->
+	<section class="intro-section">
+		<div class="container">
+			<h2 class="section-title">Tu Próxima Aventura Comienza Aquí</h2>
+			<p class="intro-text">
+				Huánuco te invita a explorar sus maravillas naturales, sitios arqueológicos milenarios y 
+				paisajes que te dejarán sin aliento. Desde las alturas de los Andes hasta la exuberancia 
+				de la selva amazónica, cada rincón cuenta una historia esperando ser descubierta.
+			</p>
+		</div>
+	</section>
+
+	<!-- Destinos Principales -->
+	<section class="destinations-section">
+		<div class="container-wide">
+			<h2 class="section-title">Destinos Imperdibles</h2>
+			<p class="section-subtitle">Lugares que transformarán tu viaje en una experiencia inolvidable</p>
+
+			<div class="destinations-grid">
+				
+				<!-- Kotosh -->
+				<div class="destination-card" data-destination="kotosh">
+					<div class="card-image-container">
+						<div class="image-placeholder">
+							<span class="dest-icon">🏛️</span>
+						</div>
+						<div class="card-overlay">
+							<button class="view-map-btn" data-lat="-9.9340" data-lng="-76.2710">
+								📍 Ver en Mapa
+							</button>
+						</div>
+						<div class="destination-badge">Arqueológico</div>
+					</div>
+					<div class="card-content">
+						<h3>Templo de las Manos Cruzadas - Kotosh</h3>
+						<div class="location-info">
+							<span class="icon">📍</span>
+							<span>5 km de Huánuco - 15 min</span>
+						</div>
+						<p class="description">
+							Uno de los centros ceremoniales más antiguos de América (2000 a.C.). El Templo de las 
+							Manos Cruzadas representa una de las primeras manifestaciones de arquitectura monumental 
+							en los Andes. Su famoso bajorrelieve de manos cruzadas es un ícono del arte precolombino.
+						</p>
+						<div class="features">
+							<span class="feature">🎫 Entrada: S/5</span>
+							<span class="feature">🕐 8:00 AM - 5:00 PM</span>
+							<span class="feature">⏱️ Visita: 1-2 horas</span>
+						</div>
+						<div class="activities">
+							<span class="activity">Fotografía</span>
+							<span class="activity">Tour Guiado</span>
+							<span class="activity">Historia</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Huánuco Pampa -->
+				<div class="destination-card" data-destination="pampa">
+					<div class="card-image-container">
+						<div class="image-placeholder">
+							<span class="dest-icon">⛰️</span>
+						</div>
+						<div class="card-overlay">
+							<button class="view-map-btn" data-lat="-9.7150" data-lng="-76.7956">
+								📍 Ver en Mapa
+							</button>
+						</div>
+						<div class="destination-badge inca">Inca</div>
+					</div>
+					<div class="card-content">
+						<h3>Huánuco Pampa</h3>
+						<div class="location-info">
+							<span class="icon">📍</span>
+							<span>145 km de Huánuco - 4 horas</span>
+						</div>
+						<p class="description">
+							Majestuosa ciudad inca a 3,800 msnm, considerada uno de los centros administrativos más 
+							importantes del Tahuantinsuyo. Con más de 4,000 estructuras perfectamente preservadas, 
+							incluye palacios, templos, plazas y depósitos (qollqas). Un testimonio impresionante de 
+							la ingeniería y planificación urbana inca.
+						</p>
+						<div class="features">
+							<span class="feature">🎫 Entrada: S/10</span>
+							<span class="feature">🕐 8:00 AM - 5:00 PM</span>
+							<span class="feature">⏱️ Visita: 3-4 horas</span>
+						</div>
+						<div class="activities">
+							<span class="activity">Trekking</span>
+							<span class="activity">Arqueología</span>
+							<span class="activity">Camping</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Tingo María -->
+				<div class="destination-card" data-destination="tingomaria">
+					<div class="card-image-container">
+						<div class="image-placeholder">
+							<span class="dest-icon">🌴</span>
+						</div>
+						<div class="card-overlay">
+							<button class="view-map-btn" data-lat="-9.2945" data-lng="-76.0094">
+								📍 Ver en Mapa
+							</button>
+						</div>
+						<div class="destination-badge nature">Naturaleza</div>
+					</div>
+					<div class="card-content">
+						<h3>Tingo María - Puerta de la Amazonía</h3>
+						<div class="location-info">
+							<span class="icon">📍</span>
+							<span>130 km de Huánuco - 3 horas</span>
+						</div>
+						<p class="description">
+							Ciudad selvática rodeada de exuberante vegetación y formaciones naturales únicas. 
+							Conocida como "La Puerta de la Amazonía", ofrece el Parque Nacional Tingo María con 
+							la famosa "Bella Durmiente", la Cueva de las Lechuzas con sus guácharos, y cascadas 
+							espectaculares en medio de la selva.
+						</p>
+						<div class="features">
+							<span class="feature">🌡️ 25°C promedio</span>
+							<span class="feature">🦜 Rica biodiversidad</span>
+							<span class="feature">⏱️ Estadía: 2-3 días</span>
+						</div>
+						<div class="activities">
+							<span class="activity">Ecoturismo</span>
+							<span class="activity">Aventura</span>
+							<span class="activity">Observación de Aves</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Cueva de las Lechuzas -->
+				<div class="destination-card" data-destination="lechuzas">
+					<div class="card-image-container">
+						<div class="image-placeholder">
+							<span class="dest-icon">🦉</span>
+						</div>
+						<div class="card-overlay">
+							<button class="view-map-btn" data-lat="-9.3098" data-lng="-76.0023">
+								📍 Ver en Mapa
+							</button>
+						</div>
+						<div class="destination-badge adventure">Aventura</div>
+					</div>
+					<div class="card-content">
+						<h3>Cueva de las Lechuzas</h3>
+						<div class="location-info">
+							<span class="icon">📍</span>
+							<span>6 km de Tingo María - 20 min</span>
+						</div>
+						<p class="description">
+							Caverna natural impresionante habitada por cientos de guácharos (aves nocturnas llamadas 
+							localmente "lechuzas"). La cueva tiene 140 metros de profundidad con formaciones rocosas 
+							espectaculares. Al atardecer, miles de guácharos emergen en un espectáculo natural único. 
+							También alberga murciélagos y otras especies.
+						</p>
+						<div class="features">
+							<span class="feature">🎫 Entrada: S/8</span>
+							<span class="feature">🕐 7:00 AM - 4:00 PM</span>
+							<span class="feature">⏱️ Visita: 1 hora</span>
+						</div>
+						<div class="activities">
+							<span class="activity">Espeleología</span>
+							<span class="activity">Fotografía de Naturaleza</span>
+							<span class="activity">Avistamiento</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Carpish -->
+				<div class="destination-card" data-destination="carpish">
+					<div class="card-image-container">
+						<div class="image-placeholder">
+							<span class="dest-icon">🌲</span>
+						</div>
+						<div class="card-overlay">
+							<button class="view-map-btn" data-lat="-9.6800" data-lng="-76.1200">
+								📍 Ver en Mapa
+							</button>
+						</div>
+						<div class="destination-badge nature">Bosque Nublado</div>
+					</div>
+					<div class="card-content">
+						<h3>Bosque de Carpish</h3>
+						<div class="location-info">
+							<span class="icon">📍</span>
+							<span>70 km de Huánuco - 2 horas</span>
+						</div>
+						<p class="description">
+							Bosque nublado mágico a 2,700 msnm con una biodiversidad extraordinaria. Hogar del 
+							gallito de las rocas (ave nacional del Perú), osos de anteojos, orquídeas y más de 
+							400 especies de aves. Los miradores naturales ofrecen vistas panorámicas espectaculares 
+							de las montañas y valles cubiertos de niebla.
+						</p>
+						<div class="features">
+							<span class="feature">🌡️ 10-15°C</span>
+							<span class="feature">🦅 Avistamiento de aves</span>
+							<span class="feature">⏱️ Visita: 2-3 horas</span>
+						</div>
+						<div class="activities">
+							<span class="activity">Birdwatching</span>
+							<span class="activity">Fotografía</span>
+							<span class="activity">Senderismo</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Cataratas de Ahuashiyacu -->
+				<div class="destination-card" data-destination="cataratas">
+					<div class="card-image-container">
+						<div class="image-placeholder">
+							<span class="dest-icon">💧</span>
+						</div>
+						<div class="card-overlay">
+							<button class="view-map-btn" data-lat="-9.3520" data-lng="-75.9840">
+								📍 Ver en Mapa
+							</button>
+						</div>
+						<div class="destination-badge adventure">Cascadas</div>
+					</div>
+					<div class="card-content">
+						<h3>Cataratas y Aguas Termales</h3>
+						<div class="location-info">
+							<span class="icon">📍</span>
+							<span>Zona de Tingo María</span>
+						</div>
+						<p class="description">
+							La región de Huánuco cuenta con impresionantes cascadas y aguas termales naturales. 
+							Las cataratas de agua cristalina caen entre la vegetación selvática creando pozas 
+							naturales perfectas para nadar. Las aguas termales medicinales ofrecen relajación 
+							y propiedades terapéuticas en medio de la naturaleza.
+						</p>
+						<div class="features">
+							<span class="feature">🏊 Natación</span>
+							<span class="feature">♨️ Aguas termales</span>
+							<span class="feature">⏱️ Día completo</span>
+						</div>
+						<div class="activities">
+							<span class="activity">Relajación</span>
+							<span class="activity">Caminata</span>
+							<span class="activity">Picnic</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<!-- Mapa Interactivo Section -->
+	<section class="map-interactive-section">
+		<div class="container-wide">
+			<h2 class="section-title">Explora en el Mapa</h2>
+			<p class="section-subtitle">Descubre la ubicación exacta de cada destino</p>
+			
+			<div class="map-container">
+				<div id="map" class="google-map"></div>
+				<div class="map-legend">
+					<h4>Leyenda</h4>
+					<div class="legend-items">
+						<div class="legend-item">
+							<span class="marker archaeological"></span>
+							<span>Sitios Arqueológicos</span>
+						</div>
+						<div class="legend-item">
+							<span class="marker nature"></span>
+							<span>Naturaleza</span>
+						</div>
+						<div class="legend-item">
+							<span class="marker adventure"></span>
+							<span>Aventura</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Consejos de Viaje -->
+	<section class="tips-section">
+		<div class="container">
+			<h2 class="section-title">Consejos para tu Viaje</h2>
+			
+			<div class="tips-grid">
+				<div class="tip-card">
+					<div class="tip-icon">🎒</div>
+					<h3>Qué Llevar</h3>
+					<ul>
+						<li>Ropa ligera y abrigadora (clima variado)</li>
+						<li>Bloqueador solar y repelente</li>
+						<li>Zapatos cómodos para caminar</li>
+						<li>Cámara fotográfica</li>
+						<li>Botella de agua reutilizable</li>
+					</ul>
+				</div>
+
+				<div class="tip-card">
+					<div class="tip-icon">🌤️</div>
+					<h3>Mejor Época</h3>
+					<ul>
+						<li><strong>Temporada Seca:</strong> Mayo - Octubre</li>
+						<li><strong>Clima:</strong> Sierra 10-20°C, Selva 25-30°C</li>
+						<li><strong>Festividades:</strong> Agosto (Aniversario), Mayo (Señor de Burgos)</li>
+						<li><strong>Trekking:</strong> Junio - Septiembre</li>
+					</ul>
+				</div>
+
+				<div class="tip-card">
+					<div class="tip-icon">🚗</div>
+					<h3>Cómo Llegar</h3>
+					<ul>
+						<li><strong>Desde Lima:</strong> 8 horas en bus</li>
+						<li><strong>Vuelos:</strong> No hay aeropuerto comercial directo</li>
+						<li><strong>Transporte local:</strong> Taxis, combis, buses</li>
+						<li><strong>Tours:</strong> Agencias en Plaza de Armas</li>
+					</ul>
+				</div>
+
+				<div class="tip-card">
+					<div class="tip-icon">💡</div>
+					<h3>Recomendaciones</h3>
+					<ul>
+						<li>Contrata guías locales certificados</li>
+						<li>Respeta las zonas arqueológicas</li>
+						<li>Lleva efectivo (cajeros limitados)</li>
+						<li>Prueba la gastronomía local</li>
+						<li>Respeta la naturaleza y comunidades</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Final -->
+	<section class="cta-final">
+		<div class="cta-content">
+			<h2>¿Listo para la Aventura?</h2>
+			<p>Huánuco te espera con los brazos abiertos. Vive experiencias que recordarás para siempre.</p>
+			<div class="cta-buttons">
+				<a href="/contacto" class="btn-primary">Planifica tu Viaje</a>
+				<a href="/" class="btn-secondary">Volver al Inicio</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<script>
+	// Google Maps Integration
+	function initMap() {
+		// Centro de Huánuco
+		const huanuco = { lat: -9.9306, lng: -76.2422 };
+		
+		const map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 9,
+			center: huanuco,
+			mapTypeId: 'terrain',
+			styles: [
+				{
+					featureType: 'all',
+					elementType: 'geometry',
+					stylers: [{ color: '#f5f5f5' }]
+				},
+				{
+					featureType: 'water',
+					elementType: 'geometry',
+					stylers: [{ color: '#06b6d4' }]
+				},
+				{
+					featureType: 'landscape.natural',
+					elementType: 'geometry',
+					stylers: [{ color: '#d1fae5' }]
+				}
+			]
+		});
+
+		// Destinos turísticos
+		const destinations = [
+			{
+				position: { lat: -9.9340, lng: -76.2710 },
+				title: 'Templo de Kotosh',
+				type: 'archaeological',
+				icon: '🏛️'
+			},
+			{
+				position: { lat: -9.7150, lng: -76.7956 },
+				title: 'Huánuco Pampa',
+				type: 'archaeological',
+				icon: '⛰️'
+			},
+			{
+				position: { lat: -9.2945, lng: -76.0094 },
+				title: 'Tingo María',
+				type: 'nature',
+				icon: '🌴'
+			},
+			{
+				position: { lat: -9.3098, lng: -76.0023 },
+				title: 'Cueva de las Lechuzas',
+				type: 'adventure',
+				icon: '🦉'
+			},
+			{
+				position: { lat: -9.6800, lng: -76.1200 },
+				title: 'Bosque de Carpish',
+				type: 'nature',
+				icon: '🌲'
+			}
+		];
+
+		// Agregar marcadores
+		destinations.forEach(dest => {
+			const marker = new google.maps.Marker({
+				position: dest.position,
+				map: map,
+				title: dest.title,
+				animation: google.maps.Animation.DROP
+			});
+
+			const infoWindow = new google.maps.InfoWindow({
+				content: `<div style="padding: 10px;"><strong>${dest.icon} ${dest.title}</strong></div>`
+			});
+
+			marker.addListener('click', () => {
+				infoWindow.open(map, marker);
+			});
+		});
+	}
+
+	// Botones de ver en mapa
+	document.addEventListener('DOMContentLoaded', () => {
+		const mapButtons = document.querySelectorAll('.view-map-btn');
+		
+		mapButtons.forEach(btn => {
+			btn.addEventListener('click', (e) => {
+				e.preventDefault();
+				const lat = parseFloat(btn.dataset.lat);
+				const lng = parseFloat(btn.dataset.lng);
+				
+				// Scroll al mapa
+				document.querySelector('.map-interactive-section').scrollIntoView({ 
+					behavior: 'smooth' 
+				});
+				
+				// Centrar mapa (después de un delay para que cargue)
+				setTimeout(() => {
+					if (window.google && window.google.maps) {
+						const map = new google.maps.Map(document.getElementById('map'));
+						map.setCenter({ lat, lng });
+						map.setZoom(12);
+					}
+				}, 1000);
+			});
+		});
+
+		// Animaciones de scroll
+		const cards = document.querySelectorAll('.destination-card, .tip-card');
+		
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.style.opacity = '1';
+					entry.target.style.transform = 'translateY(0)';
+				}
+			});
+		}, {
+			threshold: 0.1
+		});
+
+		cards.forEach((card, index) => {
+			card.style.opacity = '0';
+			card.style.transform = 'translateY(50px)';
+			card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+			observer.observe(card);
+		});
+
+		// Scroll indicator animation
+		const scrollIndicator = document.querySelector('.scroll-indicator');
+		if (scrollIndicator) {
+			window.addEventListener('scroll', () => {
+				if (window.scrollY > 100) {
+					scrollIndicator.style.opacity = '0';
+				} else {
+					scrollIndicator.style.opacity = '1';
+				}
+			});
+		}
+	});
+
+	// Cargar Google Maps
+	window.initMap = initMap;
+</script>
+
+<!-- Google Maps API -->
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&callback=initMap">
+</script>
+
+<style>
+/* Hero Section */
+.hero-turismo {
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%);
+}
+
+.parallax-bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: 
+		radial-gradient(circle at 20% 50%, rgba(56, 189, 248, 0.2) 0%, transparent 50%),
+		radial-gradient(circle at 80% 80%, rgba(14, 116, 144, 0.2) 0%, transparent 50%);
+	animation: parallaxMove 20s ease-in-out infinite;
+}
+
+@keyframes parallaxMove {
+	0%, 100% { transform: translate(0, 0); }
+	50% { transform: translate(-20px, -20px); }
+}
+
+.hero-video-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+	z-index: 1;
+}
+
+.hero-content {
+	position: relative;
+	z-index: 10;
+	text-align: center;
+	padding: 2rem;
+	max-width: 1000px;
+}
+
+.animated-title {
+	font-size: 6rem;
+	color: #ffffff;
+	font-weight: 900;
+	margin-bottom: 1rem;
+	text-shadow: 
+		0 0 50px rgba(56, 189, 248, 0.8),
+		5px 5px 20px rgba(0, 0, 0, 0.9);
+	letter-spacing: 4px;
+	animation: titleFadeIn 1.5s ease-out;
+}
+
+@keyframes titleFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animated-subtitle {
+	font-size: 2rem;
+	color: #bae6fd;
+	text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+	margin-bottom: 3rem;
+	animation: subtitleFadeIn 2s ease-out;
+	letter-spacing: 2px;
+}
+
+@keyframes subtitleFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.hero-stats {
+	display: flex;
+	justify-content: center;
+	gap: 4rem;
+	margin-top: 3rem;
+	flex-wrap: wrap;
+}
+
+.stat-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1.5rem 2rem;
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border-radius: 12px;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	animation: statsFadeIn 2.5s ease-out;
+}
+
+@keyframes statsFadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.stat-number {
+	font-size: 3rem;
+	font-weight: 900;
+	color: #7dd3fc;
+	text-shadow: 0 0 20px rgba(125, 211, 252, 0.6);
+}
+
+.stat-label {
+	font-size: 1rem;
+	color: #e0f2fe;
+	text-align: center;
+	font-weight: 600;
+}
+
+.scroll-indicator {
+	position: absolute;
+	bottom: 40px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	color: #ffffff;
+	z-index: 10;
+	transition: opacity 0.3s ease;
+}
+
+.scroll-indicator span {
+	font-size: 0.9rem;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-weight: 600;
+}
+
+.arrow-down {
+	width: 30px;
+	height: 30px;
+	border-left: 3px solid #38bdf8;
+	border-bottom: 3px solid #38bdf8;
+	transform: rotate(-45deg);
+	animation: arrowBounce 2s ease-in-out infinite;
+}
+
+@keyframes arrowBounce {
+	0%, 100% { transform: rotate(-45deg) translateY(0); }
+	50% { transform: rotate(-45deg) translateY(10px); }
+}
+
+/* Sections */
+.intro-section {
+	background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+	padding: 5rem 2rem;
+	text-align: center;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.container-wide {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 0 2rem;
+}
+
+.section-title {
+	font-size: 3.5rem;
+	color: #0c4a6e;
+	font-weight: 900;
+	margin-bottom: 1rem;
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	width: 100%;
+}
+
+.section-title::after {
+	content: '';
+	position: absolute;
+	bottom: -15px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 120px;
+	height: 5px;
+	background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+	border-radius: 3px;
+}
+
+.section-subtitle {
+	text-align: center;
+	font-size: 1.3rem;
+	color: #0369a1;
+	margin-bottom: 4rem;
+	font-style: italic;
+}
+
+.intro-text {
+	max-width: 900px;
+	margin: 2rem auto 0;
+	font-size: 1.25rem;
+	line-height: 2;
+	color: #475569;
+}
+
+/* Destinations Grid */
+.destinations-section {
+	background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+	padding: 6rem 2rem;
+}
+
+.destinations-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+	gap: 3rem;
+	margin-top: 3rem;
+}
+
+.destination-card {
+	background: #ffffff;
+	border-radius: 20px;
+	overflow: hidden;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+	transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+	border: 3px solid transparent;
+}
+
+.destination-card:hover {
+	transform: translateY(-15px) scale(1.02);
+	box-shadow: 0 20px 60px rgba(14, 165, 233, 0.3);
+	border-color: #0ea5e9;
+}
+
+.card-image-container {
+	position: relative;
+	height: 300px;
+	overflow: hidden;
+}
+
+.image-placeholder {
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.5s ease;
+}
+
+.destination-card:hover .image-placeholder {
+	transform: scale(1.15);
+}
+
+.dest-icon {
+	font-size: 8rem;
+	filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.2));
+}
+
+.card-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	padding: 2rem;
+	opacity: 0;
+	transition: opacity 0.4s ease;
+}
+
+.destination-card:hover .card-overlay {
+	opacity: 1;
+}
+
+.view-map-btn {
+	padding: 1rem 2rem;
+	background: rgba(14, 165, 233, 0.95);
+	color: #ffffff;
+	border: 2px solid #ffffff;
+	border-radius: 50px;
+	font-weight: 700;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.view-map-btn:hover {
+	background: #0ea5e9;
+	transform: scale(1.1);
+}
+
+.destination-badge {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	padding: 0.6rem 1.2rem;
+	background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+	color: #ffffff;
+	border-radius: 20px;
+	font-weight: 700;
+	font-size: 0.85rem;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.destination-badge.inca {
+	background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.destination-badge.nature {
+	background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.destination-badge.adventure {
+	background: linear-gradient(135deg, #ef4444, #f87171);
+}
+
+.card-content {
+	padding: 2.5rem;
+}
+
+.card-content h3 {
+	font-size: 2rem;
+	color: #0c4a6e;
+	font-weight: 800;
+	margin-bottom: 1rem;
+}
+
+.location-info {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: #64748b;
+	font-weight: 600;
+	margin-bottom: 1.5rem;
+	font-size: 1rem;
+}
+
+.location-info .icon {
+	font-size: 1.2rem;
+}
+
+.description {
+	color: #475569;
+	line-height: 1.8;
+	margin-bottom: 1.5rem;
+	text-align: justify;
+	font-size: 1.05rem;
+}
+
+.features {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.feature {
+	padding: 0.6rem 1rem;
+	background: #f0f9ff;
+	border: 2px solid #bae6fd;
+	border-radius: 20px;
+	color: #0369a1;
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+.activities {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.7rem;
+}
+
+.activity {
+	padding: 0.5rem 1rem;
+	background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+	color: #ffffff;
+	border-radius: 15px;
+	font-weight: 600;
+	font-size: 0.85rem;
+}
+
+/* Mapa Interactivo */
+.map-interactive-section {
+	background: #ffffff;
+	padding: 6rem 2rem;
+}
+
+.map-container {
+	position: relative;
+	height: 600px;
+	border-radius: 20px;
+	overflow: hidden;
+	box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+	border: 3px solid #0ea5e9;
+}
+
+.google-map {
+	width: 100%;
+	height: 100%;
+}
+
+.map-legend {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(10px);
+	padding: 1.5rem;
+	border-radius: 12px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+	border: 2px solid #0ea5e9;
+}
+
+.map-legend h4 {
+	color: #0c4a6e;
+	font-weight: 700;
+	margin-bottom: 1rem;
+	font-size: 1.1rem;
+}
+
+.legend-items {
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+}
+
+.legend-item {
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	font-size: 0.95rem;
+	color: #475569;
+	font-weight: 600;
+}
+
+.marker {
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	border: 2px solid #ffffff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.marker.archaeological {
+	background: #0ea5e9;
+}
+
+.marker.nature {
+	background: #10b981;
+}
+
+.marker.adventure {
+	background: #ef4444;
+}
+
+/* Tips Section */
+.tips-section {
+	background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+	padding: 6rem 2rem;
+}
+
+.tips-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 2.5rem;
+	margin-top: 3rem;
+}
+
+.tip-card {
+	background: #ffffff;
+	padding: 2.5rem;
+	border-radius: 16px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+	border: 2px solid #bae6fd;
+	transition: all 0.3s ease;
+}
+
+.tip-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 15px 40px rgba(14, 165, 233, 0.2);
+	border-color: #0ea5e9;
+}
+
+.tip-icon {
+	font-size: 4rem;
+	margin-bottom: 1.5rem;
+	text-align: center;
+}
+
+.tip-card h3 {
+	font-size: 1.8rem;
+	color: #0c4a6e;
+	font-weight: 800;
+	margin-bottom: 1.5rem;
+	text-align: center;
+}
+
+.tip-card ul {
+	list-style: none;
+	padding: 0;
+}
+
+.tip-card li {
+	padding: 0.8rem 0;
+	border-bottom: 1px solid #e0f2fe;
+	color: #475569;
+	font-size: 1rem;
+	line-height: 1.6;
+}
+
+.tip-card li:last-child {
+	border-bottom: none;
+}
+
+.tip-card strong {
+	color: #0369a1;
+	font-weight: 700;
+}
+
+/* CTA Final */
+.cta-final {
+	background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0284c7 100%);
+	padding: 6rem 2rem;
+	position: relative;
+	overflow: hidden;
+}
+
+.cta-final::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: 
+		radial-gradient(circle, rgba(186, 230, 253, 0.1) 2px, transparent 2px);
+	background-size: 50px 50px;
+	animation: drift 30s linear infinite;
+}
+
+@keyframes drift {
+	0% { background-position: 0 0; }
+	100% { background-position: 50px 50px; }
+}
+
+.cta-content {
+	position: relative;
+	z-index: 10;
+	text-align: center;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.cta-content h2 {
+	font-size: 3.5rem;
+	color: #ffffff;
+	font-weight: 900;
+	margin-bottom: 1.5rem;
+	text-shadow: 0 0 40px rgba(56, 189, 248, 0.6);
+}
+
+.cta-content p {
+	font-size: 1.4rem;
+	color: #bae6fd;
+	margin-bottom: 3rem;
+	line-height: 1.8;
+}
+
+.cta-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 2rem;
+	flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+	padding: 1.3rem 3rem;
+	font-size: 1.1rem;
+	font-weight: 700;
+	text-decoration: none;
+	border-radius: 50px;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	transition: all 0.3s ease;
+	border: 3px solid;
+}
+
+.btn-primary {
+	background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+	color: #ffffff;
+	border-color: #ffffff;
+}
+
+.btn-primary:hover {
+	background: #ffffff;
+	color: #0c4a6e;
+	transform: translateY(-3px) scale(1.05);
+	box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
+}
+
+.btn-secondary {
+	background: rgba(255, 255, 255, 0.15);
+	color: #ffffff;
+	border-color: #ffffff;
+	backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+	background: rgba(255, 255, 255, 0.25);
+	transform: translateY(-3px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.animated-title {
+		font-size: 3.5rem;
+	}
+
+	.animated-subtitle {
+		font-size: 1.3rem;
+	}
+
+	.hero-stats {
+		gap: 2rem;
+	}
+
+	.stat-number {
+		font-size: 2rem;
+	}
+
+	.section-title {
+		font-size: 2.5rem;
+	}
+
+	.destinations-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.map-container {
+		height: 400px;
+	}
+
+	.map-legend {
+		position: static;
+		margin-top: 1rem;
+	}
+
+	.tips-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cta-content h2 {
+		font-size: 2.5rem;
+	}
+
+	.cta-buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.btn-primary,
+	.btn-secondary {
+		width: 100%;
+		max-width: 300px;
+	}
+}
+
+@media (max-width: 480px) {
+	.animated-title {
+		font-size: 2.5rem;
+	}
+
+	.card-content {
+		padding: 1.8rem;
+	}
+
+	.card-content h3 {
+		font-size: 1.6rem;
+	}
+}
+</style>
+</Layout>

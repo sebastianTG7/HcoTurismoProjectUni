@@ -1,0 +1,641 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import { Image } from 'astro:assets';
+import huanucoMapa from '../assets/imagenes/huanuco_mapa.webp';
+import historia from '../assets/imagenes/historia.webp';
+import naturaleza from '../assets/imagenes/naturaleza.webp';
+import cultura from '../assets/imagenes/cultura.webp';
+import pachamanca from '../assets/imagenes/pachamanca.webp';
+import turismo from '../assets/imagenes/turismo.webp';
+---
+
+<Layout title="Huánuco - Región Natural y Cultural del Perú">
+	<Hero />
+	
+	<section id="explorar" class="map-section">
+		<div class="map-header">
+			<h2>Explora Nuestra Región</h2>
+			<p class="map-subtitle">Un viaje a través de Huánuco</p>
+		</div>
+
+		<div class="map-journey">
+			<!-- Mapa de fondo scrollable -->
+			<div class="map-background">
+				<Image 
+					src={huanucoMapa} 
+					alt="Mapa de Huánuco" 
+					class="map-image"
+					loading="eager"
+					quality={75}
+					format="webp"
+				/>
+			</div>
+
+			<!-- Contenedor de puntos -->
+			<div class="points-container">
+				
+				<!-- Punto 1: Historia -->
+				<a href="/historia" class="journey-point" data-point="1">
+					<div class="point-circle">
+						<div class="point-image">
+							<Image 
+								src={historia} 
+								alt="Historia" 
+								class="point-icon-img"
+								loading="lazy"
+								quality={90}
+							/>
+						</div>
+					</div>
+					<h3 class="point-title">HISTORIA</h3>
+				</a>
+
+				<!-- Punto 2: Naturaleza -->
+				<a href="/naturaleza" class="journey-point" data-point="2">
+					<div class="point-circle">
+						<div class="point-image">
+							<Image 
+								src={naturaleza} 
+								alt="Naturaleza" 
+								class="point-icon-img"
+								loading="lazy"
+								quality={90}
+							/>
+						</div>
+					</div>
+					<h3 class="point-title">NATURALEZA</h3>
+				</a>
+
+				<!-- Punto 3: Turismo -->
+				<a href="/turismo" class="journey-point" data-point="3">
+					<div class="point-circle">
+						<div class="point-image">
+							<Image 
+								src={turismo} 
+								alt="Turismo" 
+								class="point-icon-img"
+								loading="lazy"
+								quality={90}
+							/>
+						</div>
+					</div>
+					<h3 class="point-title">TURISMO</h3>
+				</a>
+
+				<!-- Punto 4: Cultura -->
+				<a href="/cultura" class="journey-point" data-point="4">
+					<div class="point-circle">
+						<div class="point-image">
+							<Image 
+								src={cultura} 
+								alt="Cultura" 
+								class="point-icon-img"
+								loading="lazy"
+								quality={90}
+							/>
+						</div>
+					</div>
+					<h3 class="point-title">CULTURA</h3>
+				</a>
+
+				<!-- Punto 5: Gastronomía -->
+				<a href="/gastronomia" class="journey-point" data-point="5">
+					<div class="point-circle">
+						<div class="point-image">
+							<Image 
+								src={pachamanca} 
+								alt="Gastronomía" 
+								class="point-icon-img"
+								loading="lazy"
+								quality={90}
+							/>
+						</div>
+					</div>
+					<h3 class="point-title">GASTRONOMÍA</h3>
+				</a>
+
+			</div>
+		</div>
+	</section>
+
+	<section class="about">
+		<div class="container">
+			<div class="about-content">
+				<div class="about-text">
+					<h2>¿Dónde Estamos?</h2>
+					<p>Huánuco se encuentra en la región centro-oriental del Perú, en una posición estratégica que conecta los Andes con la Amazonía. Nuestra ubicación privilegiada nos permite tener una diversidad geográfica única.</p>
+					<div class="location-details">
+						<div class="detail-item">
+							<span class="icon">📍</span>
+							<div>
+								<strong>Ubicación:</strong>
+								<p>Centro-oriente del Perú</p>
+							</div>
+						</div>
+						<div class="detail-item">
+							<span class="icon">🏔️</span>
+							<div>
+								<strong>Altitud:</strong>
+								<p>1,894 msnm (ciudad)</p>
+							</div>
+						</div>
+						<div class="detail-item">
+							<span class="icon">🗺️</span>
+							<div>
+								<strong>Superficie:</strong>
+								<p>36,938 km²</p>
+							</div>
+						</div>
+						<div class="detail-item">
+							<span class="icon">🚗</span>
+							<div>
+								<strong>Desde Lima:</strong>
+								<p>410 km - 8 horas en bus</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="about-image">
+					<div class="map-container-home">
+						<iframe
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d249561.32618183!2d-76.4232!3d-9.9306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c340c29eb7e9%3A0x4a9b7e3c3e5a6f8c!2sHu%C3%A1nuco%2C%20Per%C3%BA!5e0!3m2!1ses!2spe!4v1234567890"
+							width="100%"
+							height="100%"
+							style="border:0; border-radius: 12px;"
+							allowfullscreen=""
+							loading="lazy"
+							referrerpolicy="no-referrer-when-downgrade">
+						</iframe>
+						<div class="map-marker">
+							<span>📍</span>
+							<span class="marker-label">Huánuco, Perú</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const journeyPoints = document.querySelectorAll('.journey-point');
+
+		// Intersection Observer para animar puntos cuando aparecen
+		const observerOptions = {
+			threshold: 0.3,
+			rootMargin: '0px 0px -50px 0px'
+		};
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('visible');
+				}
+			});
+		}, observerOptions);
+
+		journeyPoints.forEach(point => {
+			observer.observe(point);
+		});
+	});
+</script>
+
+<style>
+.map-section {
+	background: #f5f5f5;
+	position: relative;
+}
+
+.map-header {
+	position: relative;
+	z-index: 10;
+	text-align: center;
+	padding: 4rem 2rem 3rem;
+	background: linear-gradient(180deg, 
+		#064e3b 0%, 
+		#0e7490 50%,
+		rgba(220, 243, 254, 0.4) 100%
+	);
+}
+
+.map-header h2 {
+	font-size: 3.5rem;
+	color: #ffffff;
+	font-weight: 700;
+	margin-bottom: 1rem;
+	text-shadow: 
+		0 0 30px rgba(16, 185, 129, 0.6),
+		0 0 50px rgba(6, 182, 212, 0.4),
+		3px 3px 10px rgba(0, 0, 0, 0.5);
+	letter-spacing: 2px;
+}
+
+.map-subtitle {
+	color: #dcf3fe;
+	font-size: 1.3rem;
+	letter-spacing: 3px;
+	text-transform: uppercase;
+	text-shadow: 
+		0 0 20px rgba(220, 243, 254, 0.8),
+		2px 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.map-journey {
+	position: relative;
+	width: 100%;
+	min-height: 140vh;
+}
+
+.map-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%);
+	overflow: hidden;
+}
+
+.map-background::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 200px;
+	background: linear-gradient(180deg, 
+		rgba(220, 243, 254, 0.8) 0%,
+		rgba(220, 243, 254, 0.4) 30%,
+		transparent 100%
+	);
+	z-index: 2;
+	pointer-events: none;
+}
+
+.map-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	min-height: 140vh;
+}
+
+.points-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	padding: 5vh 0;
+}
+
+/* Puntos de viaje */
+.journey-point {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.2rem;
+	margin: 8vh 0;
+	opacity: 0;
+	transform: translateY(50px) scale(0.9);
+	transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.journey-point.visible {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}
+
+/* Alternar posición izquierda-derecha */
+.journey-point:nth-child(odd) {
+	align-self: flex-start;
+	margin-left: 15%;
+}
+
+.journey-point:nth-child(even) {
+	align-self: flex-end;
+	margin-right: 15%;
+}
+
+.point-circle {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+	border: 5px solid rgba(255, 255, 255, 0.95);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 
+		0 10px 40px rgba(0, 0, 0, 0.4),
+		0 0 50px rgba(16, 185, 129, 0.6),
+		inset 0 0 30px rgba(255, 255, 255, 0.2);
+	cursor: pointer;
+	transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+	position: relative;
+	overflow: hidden;
+}
+
+.point-circle::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	transform: translate(-50%, -50%) scale(0);
+	transition: transform 0.6s ease-out;
+}
+
+.point-image {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+	overflow: hidden;
+}
+
+.point-icon-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.point-title {
+	font-size: 1.3rem;
+	font-weight: 800;
+	color: #064e3b;
+	letter-spacing: 3px;
+	text-align: center;
+	text-shadow: 
+		0 0 15px rgba(255, 255, 255, 1),
+		0 3px 6px rgba(0, 0, 0, 0.4),
+		0 0 25px rgba(16, 185, 129, 0.3);
+	background: rgba(255, 255, 255, 0.95);
+	padding: 0.8rem 1.8rem;
+	border-radius: 25px;
+	border: 3px solid rgba(16, 185, 129, 0.7);
+	box-shadow: 
+		0 6px 20px rgba(0, 0, 0, 0.3),
+		0 0 30px rgba(16, 185, 129, 0.4),
+		inset 0 0 20px rgba(16, 185, 129, 0.1);
+	backdrop-filter: blur(10px);
+	white-space: nowrap;
+	transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.journey-point:hover .point-title {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+	color: #ffffff;
+	border-color: rgba(255, 255, 255, 0.95);
+	transform: translateY(-3px);
+}
+
+.about {
+	padding: 5rem 2rem;
+	background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
+	position: relative;
+	z-index: 10;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.about-content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 3rem;
+	align-items: stretch;
+}
+
+.about-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.about-image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 500px;
+}
+
+.about-text h2 {
+	font-size: 2.5rem;
+	margin-bottom: 1.5rem;
+	color: #2c5530;
+	font-weight: 700;
+}
+
+.about-text p {
+	color: #5a6c57;
+	line-height: 1.8;
+	margin-bottom: 1.5rem;
+	font-size: 1.1rem;
+}
+
+.location-details {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5rem;
+	margin-top: 2rem;
+}
+
+.detail-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: 1rem;
+	background: rgba(16, 185, 129, 0.05);
+	border-radius: 8px;
+	border-left: 4px solid #10b981;
+}
+
+.detail-item .icon {
+	font-size: 2rem;
+	flex-shrink: 0;
+}
+
+.detail-item strong {
+	color: #2c5530;
+	font-size: 0.95rem;
+	display: block;
+	margin-bottom: 0.3rem;
+}
+
+.detail-item p {
+	color: #5a6c57;
+	font-size: 1rem;
+	margin: 0;
+	line-height: 1.4;
+}
+
+.map-container-home {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	min-height: 500px;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	border: 3px solid #10b981;
+}
+
+.map-container-home iframe {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.map-marker {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(16, 185, 129, 0.95);
+	backdrop-filter: blur(10px);
+	padding: 0.8rem 1.5rem;
+	border-radius: 25px;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: #ffffff;
+	font-weight: 700;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	border: 2px solid #ffffff;
+	z-index: 10;
+}
+
+.marker-label {
+	font-size: 1rem;
+	letter-spacing: 0.5px;
+}
+
+.image-placeholder {
+	background: linear-gradient(135deg, #2c5530 0%, #4a7c4e 100%);
+	border-radius: 8px;
+	height: 400px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 8rem;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 1200px) {
+	.journey-point:nth-child(odd) {
+		margin-left: 10%;
+	}
+
+	.journey-point:nth-child(even) {
+		margin-right: 10%;
+	}
+}
+
+@media (max-width: 1024px) {
+	.point-circle {
+		width: 100px;
+		height: 100px;
+	}
+
+	.point-title {
+		font-size: 1.1rem;
+		padding: 0.7rem 1.5rem;
+		letter-spacing: 2px;
+	}
+
+	.journey-point:nth-child(odd) {
+		margin-left: 8%;
+	}
+
+	.journey-point:nth-child(even) {
+		margin-right: 8%;
+	}
+}
+
+@media (max-width: 768px) {
+	.map-header h2 {
+		font-size: 2.5rem;
+	}
+
+	.map-subtitle {
+		font-size: 1rem;
+	}
+
+	.map-journey {
+		min-height: 180vh;
+	}
+
+	.journey-point {
+		margin: 6vh 0;
+	}
+
+	.journey-point:nth-child(odd),
+	.journey-point:nth-child(even) {
+		align-self: center;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.point-circle {
+		width: 90px;
+		height: 90px;
+	}
+
+	.point-title {
+		font-size: 1rem;
+		padding: 0.6rem 1.3rem;
+		letter-spacing: 2px;
+	}
+
+	.about-content {
+		grid-template-columns: 1fr;
+	}
+
+	.about-image {
+		min-height: 400px;
+	}
+
+	.location-details {
+		grid-template-columns: 1fr;
+	}
+	
+	.about-text h2 {
+		text-align: center;
+		font-size: 2rem;
+	}
+
+	.map-container-home {
+		min-height: 400px;
+	}
+}
+
+@media (max-width: 480px) {
+	.point-circle {
+		width: 80px;
+		height: 80px;
+	}
+
+	.point-title {
+		font-size: 0.9rem;
+		padding: 0.5rem 1.1rem;
+		letter-spacing: 1.5px;
+	}
+}
+</style>
