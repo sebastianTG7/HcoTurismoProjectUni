@@ -21,8 +21,38 @@ const { title = "Huánuco - Región Natural y Cultural" } = Astro.props;
         <slot /> 
 	</main>
     <Footer />
+    
+    <!-- Botón Scroll to Top -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Volver arriba">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
 </body>
 </html>
+
+<script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        
+        // Mostrar/ocultar botón según scroll
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+        
+        // Scroll suave al hacer clic
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
 
 <style is:global>
 /* Estilos globales que aplican a todo el sitio */
@@ -40,5 +70,95 @@ body {
 
 main {
     min-height: 100vh;
+}
+
+/* Botón Scroll to Top */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.scroll-to-top:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 6px 30px rgba(16, 185, 129, 0.6);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.scroll-to-top:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.scroll-to-top svg {
+    color: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Animación de pulso */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 30px rgba(16, 185, 129, 0.7);
+    }
+}
+
+.scroll-to-top.visible {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.scroll-to-top:hover {
+    animation: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .scroll-to-top {
+        width: 45px;
+        height: 45px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .scroll-to-top svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .scroll-to-top {
+        width: 40px;
+        height: 40px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .scroll-to-top svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 </style>

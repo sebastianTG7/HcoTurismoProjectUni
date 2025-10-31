@@ -1,0 +1,446 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Iniciar Sesión - Huánuco">
+    <Header />
+    
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Bienvenido</h1>
+                <p>Inicia sesión para continuar</p>
+            </div>
+
+            <!-- Formulario de Inicio de Sesión -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-usuario">Usuario</label>
+                    <input type="text" id="login-usuario" name="usuario" required />
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" name="password" required />
+                </div>
+                <button type="submit" class="submit-btn">Iniciar Sesión</button>
+                <div class="form-links">
+                    <a href="#" id="showRecovery">¿Olvidaste tu contraseña?</a>
+                </div>
+                <div class="form-footer">
+                    <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate aquí</a></p>
+                </div>
+            </form>
+
+            <!-- Formulario de Registro -->
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="register-nombre">Nombre Completo</label>
+                    <input type="text" id="register-nombre" name="nombre" required />
+                </div>
+                <div class="form-group">
+                    <label for="register-usuario">Usuario</label>
+                    <input type="text" id="register-usuario" name="usuario" required />
+                </div>
+                <div class="form-group">
+                    <label for="register-correo">Correo Electrónico</label>
+                    <input type="email" id="register-correo" name="correo" required />
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Contraseña</label>
+                    <input type="password" id="register-password" name="password" required />
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">Confirmar Contraseña</label>
+                    <input type="password" id="register-confirm-password" name="confirmPassword" required />
+                </div>
+                <button type="submit" class="submit-btn">Registrarse</button>
+                <div class="form-footer">
+                    <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión aquí</a></p>
+                </div>
+            </form>
+
+            <!-- Formulario de Recuperación de Contraseña -->
+            <form id="recoveryForm" class="auth-form">
+                <div class="form-group">
+                    <label for="recovery-correo">Correo Electrónico</label>
+                    <input type="email" id="recovery-correo" name="correo" required />
+                </div>
+                <button type="submit" class="submit-btn">Recuperar Contraseña</button>
+                <div class="form-footer">
+                    <p><a href="#" id="backToLogin">Volver al inicio de sesión</a></p>
+                </div>
+            </form>
+
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <Footer />
+</Layout>
+
+<script>
+    const loginForm = document.getElementById('loginForm') as HTMLFormElement;
+    const registerForm = document.getElementById('registerForm') as HTMLFormElement;
+    const recoveryForm = document.getElementById('recoveryForm') as HTMLFormElement;
+    const message = document.getElementById('message') as HTMLDivElement;
+
+    // Navegación entre formularios
+    document.getElementById('showRegister')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.classList.remove('active');
+        registerForm.classList.add('active');
+        recoveryForm.classList.remove('active');
+        message.textContent = '';
+    });
+
+    document.getElementById('showLogin')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
+        recoveryForm.classList.remove('active');
+        message.textContent = '';
+    });
+
+    document.getElementById('showRecovery')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.classList.remove('active');
+        registerForm.classList.remove('active');
+        recoveryForm.classList.add('active');
+        message.textContent = '';
+    });
+
+    document.getElementById('backToLogin')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
+        recoveryForm.classList.remove('active');
+        message.textContent = '';
+    });
+
+    // Manejo del formulario de registro
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(registerForm);
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirmPassword');
+
+        if (password !== confirmPassword) {
+            showMessage('Las contraseñas no coinciden', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nombre: formData.get('nombre'),
+                    usuario: formData.get('usuario'),
+                    correo: formData.get('correo'),
+                    contrasena: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage('Registro exitoso. Ahora puedes iniciar sesión.', 'success');
+                setTimeout(() => {
+                    registerForm.classList.remove('active');
+                    loginForm.classList.add('active');
+                    registerForm.reset();
+                }, 2000);
+            } else {
+                showMessage(data.message || 'Error al registrarse', 'error');
+            }
+        } catch (error) {
+            showMessage('Error de conexión', 'error');
+        }
+    });
+
+    // Manejo del formulario de inicio de sesión
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(loginForm);
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    usuario: formData.get('usuario'),
+                    password: formData.get('password')
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage('Inicio de sesión exitoso', 'success');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1500);
+            } else {
+                showMessage(data.message || 'Usuario o contraseña incorrectos', 'error');
+            }
+        } catch (error) {
+            showMessage('Error de conexión', 'error');
+        }
+    });
+
+    // Manejo del formulario de recuperación
+    recoveryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(recoveryForm);
+
+        try {
+            const response = await fetch('/api/auth/recovery', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    correo: formData.get('correo')
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage('Se ha enviado un correo de recuperación', 'success');
+                setTimeout(() => {
+                    recoveryForm.reset();
+                }, 2000);
+            } else {
+                showMessage(data.message || 'Error al enviar correo', 'error');
+            }
+        } catch (error) {
+            showMessage('Error de conexión', 'error');
+        }
+    });
+
+    function showMessage(text: string, type: 'success' | 'error') {
+        message.textContent = text;
+        message.className = `message ${type}`;
+        message.style.display = 'block';
+        setTimeout(() => {
+            message.style.display = 'none';
+        }, 5000);
+    }
+</script>
+
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 20px 60px;
+        background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+
+    .login-box {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 450px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+        color: #064e3b;
+        font-size: 32px;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+
+    .login-header p {
+        color: #059669;
+        font-size: 16px;
+    }
+
+    .auth-form {
+        display: none;
+    }
+
+    .auth-form.active {
+        display: block;
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #064e3b;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #d1fae5;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background: white;
+        color: #064e3b;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .form-links {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .form-links a {
+        color: #059669;
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .form-links a:hover {
+        color: #10b981;
+        text-decoration: underline;
+    }
+
+    .form-footer {
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #d1fae5;
+    }
+
+    .form-footer p {
+        color: #064e3b;
+        font-size: 14px;
+    }
+
+    .form-footer a {
+        color: #10b981;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .form-footer a:hover {
+        color: #059669;
+        text-decoration: underline;
+    }
+
+    .message {
+        display: none;
+        padding: 12px;
+        border-radius: 10px;
+        margin-top: 20px;
+        text-align: center;
+        font-weight: 500;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message.success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #10b981;
+    }
+
+    .message.error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #ef4444;
+    }
+
+    @media (max-width: 480px) {
+        .login-box {
+            padding: 30px 20px;
+        }
+
+        .login-header h1 {
+            font-size: 26px;
+        }
+    }
+</style>

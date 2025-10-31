@@ -1,5 +1,14 @@
 ---
+const sessionCookie = Astro.cookies.get('session');
+let user = null;
 
+if (sessionCookie) {
+    try {
+        user = JSON.parse(sessionCookie.value);
+    } catch (e) {
+        // Invalid session
+    }
+}
 ---
 
 <header id="navbar">
@@ -18,12 +27,38 @@
                 <li><a href="/turismo">TURISMO</a></li>
                 <li><a href="/cultura">CULTURA</a></li>
 				<li><a href="/gastronomia">GASTRONOMÍA</a></li>
+                <li><a href="/contacto">CONTACTO</a></li>
             </ul>
         </div>
         <div class="nav-right">
-            <a href="/contacto" class="contact-btn">
-                <span>CONTACTO</span>
-            </a>
+            {user ? (
+                <div class="user-menu">
+                    <button class="welcome-btn" id="userMenuBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Bienvenido {user.nombre}</span>
+                        <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" id="desktopLogoutBtn" class="dropdown-item logout-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            ) : (
+                <a href="/login" class="login-btn">
+                    <span>INICIAR SESIÓN</span>
+                </a>
+            )}
             <div class="hamburger-menu" id="hamburger">
                 <span></span>
                 <span></span>
@@ -33,16 +68,58 @@
     </nav>
     <div class="mobile-menu" id="mobileMenu">
         <ul>
-            <li><a href="/">INICIO</a></li>
-            <li><a href="/historia">HISTORIA</a></li>
-            <li><a href="/naturaleza">NATURALEZA</a></li>
-            <li><a href="/turismo">TURISMO</a></li>
-            <li><a href="/cultura">CULTURA</a></li>
-            <li><a href="/gastronomia">GASTRONOMÍA</a></li>
-            <li><a href="/contacto" class="mobile-contact">CONTACTO</a></li>
+            {user ? (
+                <>
+                    <li class="mobile-user-info">
+                        <div class="user-avatar">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="user-details">
+                            <span class="user-greeting">Bienvenido</span>
+                            <span class="user-name">{user.nombre}</span>
+                        </div>
+                    </li>
+                    <li class="menu-divider"></li>
+                    <li><a href="/">INICIO</a></li>
+                    <li><a href="/historia">HISTORIA</a></li>
+                    <li><a href="/naturaleza">NATURALEZA</a></li>
+                    <li><a href="/turismo">TURISMO</a></li>
+                    <li><a href="/cultura">CULTURA</a></li>
+                    <li><a href="/gastronomia">GASTRONOMÍA</a></li>
+                    <li><a href="/contacto" class="mobile-contact">CONTACTO</a></li>
+                    <li class="menu-divider"></li>
+                    <li><a href="#" id="logoutBtn" class="mobile-logout">CERRAR SESIÓN</a></li>
+                </>
+            ) : (
+                <>
+                    <li><a href="/">INICIO</a></li>
+                    <li><a href="/historia">HISTORIA</a></li>
+                    <li><a href="/naturaleza">NATURALEZA</a></li>
+                    <li><a href="/turismo">TURISMO</a></li>
+                    <li><a href="/cultura">CULTURA</a></li>
+                    <li><a href="/gastronomia">GASTRONOMÍA</a></li>
+                    <li><a href="/contacto" class="mobile-contact">CONTACTO</a></li>
+                    <li><a href="/login" class="mobile-login">INICIAR SESIÓN</a></li>
+                </>
+            )}
         </ul>
     </div>
 </header>
+
+<!-- Modal de confirmación de cierre de sesión -->
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <h2>Cerrar Sesión</h2>
+        <p>¿Estás seguro que quieres cerrar sesión?</p>
+        <div class="modal-buttons">
+            <button id="confirmLogout" class="btn-confirm">Sí, cerrar sesión</button>
+            <button id="cancelLogout" class="btn-cancel">Cancelar</button>
+        </div>
+    </div>
+</div>
 
 <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
@@ -51,6 +128,13 @@
         const scrollThreshold = 100;
         const hamburger = document.getElementById('hamburger');
         const mobileMenu = document.getElementById('mobileMenu');
+        const logoutModal = document.getElementById('logoutModal');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const desktopLogoutBtn = document.getElementById('desktopLogoutBtn');
+        const confirmLogout = document.getElementById('confirmLogout');
+        const cancelLogout = document.getElementById('cancelLogout');
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userDropdown = document.getElementById('userDropdown');
         
         // Scroll functionality
         window.addEventListener('scroll', () => {
@@ -75,6 +159,21 @@
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
         });
 
+        // User menu dropdown (desktop)
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userDropdown.contains(e.target) && !userMenuBtn.contains(e.target)) {
+                    userDropdown.classList.remove('active');
+                }
+            });
+        }
+
         // Mobile menu toggle
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
@@ -83,7 +182,7 @@
         });
 
         // Close menu when clicking on a link
-        const mobileLinks = mobileMenu.querySelectorAll('a');
+        const mobileLinks = mobileMenu.querySelectorAll('a:not(#logoutBtn)');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
@@ -94,10 +193,60 @@
 
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!navbar.contains(e.target)) {
+            if (!navbar.contains(e.target) && !logoutModal.contains(e.target)) {
                 hamburger.classList.remove('active');
                 mobileMenu.classList.remove('active');
                 document.body.classList.remove('menu-open');
+            }
+        });
+
+        // Logout functionality - Mobile
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                logoutModal.classList.add('active');
+                document.body.classList.add('modal-open');
+            });
+        }
+
+        // Logout functionality - Desktop
+        if (desktopLogoutBtn) {
+            desktopLogoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                userDropdown.classList.remove('active');
+                logoutModal.classList.add('active');
+                document.body.classList.add('modal-open');
+            });
+        }
+
+        if (confirmLogout) {
+            confirmLogout.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/auth/logout', {
+                        method: 'POST'
+                    });
+                    
+                    if (response.ok) {
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    console.error('Error al cerrar sesión:', error);
+                }
+            });
+        }
+
+        if (cancelLogout) {
+            cancelLogout.addEventListener('click', () => {
+                logoutModal.classList.remove('active');
+                document.body.classList.remove('modal-open');
+            });
+        }
+
+        // Close modal when clicking outside
+        logoutModal?.addEventListener('click', (e) => {
+            if (e.target === logoutModal) {
+                logoutModal.classList.remove('active');
+                document.body.classList.remove('modal-open');
             }
         });
     });
@@ -150,31 +299,36 @@ header.hidden {
 }
 
 nav {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    padding: 20px 50px;
+    gap: 40px;
+    padding: 18px 40px;
     color: white;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
-.logo {
-    font-size: 28px;
-    font-weight: 700;
-    text-decoration: none;
-    color: #ffffff;
-    letter-spacing: 3px;
+.nav-left {
     display: flex;
     align-items: center;
-    gap: 10px;
-    text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-    transition: all 0.3s ease;
-    position: relative;
+}
+
+.nav-center {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
 }
 
 .logo-icon {
-    font-size: 32px;
+    font-size: 30px;
     filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.6));
     animation: leafPulse 3s ease-in-out infinite;
 }
@@ -192,7 +346,9 @@ nav {
 .nav-center ul {
     display: flex;
     list-style: none;
-    gap: 45px;
+    gap: 35px;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-center a {
@@ -200,10 +356,11 @@ nav {
     color: #e0e0e0;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 2px;
-    padding: 8px 0;
+    letter-spacing: 1.8px;
+    padding: 10px 0;
     position: relative;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .nav-center a::before {
@@ -236,29 +393,172 @@ nav {
     width: 100%;
 }
 
+.logo {
+    font-size: 26px;
+    font-weight: 700;
+    text-decoration: none;
+    color: #ffffff;
+    letter-spacing: 2.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    white-space: nowrap;
+}
+
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 35px;
+    gap: 20px;
 }
 
-.contact-btn {
+.login-btn {
     position: relative;
     text-decoration: none;
     color: #ffffff;
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.4));
-    padding: 12px 30px;
+    padding: 12px 28px;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 2px;
+    letter-spacing: 1.8px;
     border: 1.5px solid rgba(16, 185, 129, 0.6);
     transition: all 0.4s ease;
     overflow: hidden;
     backdrop-filter: blur(10px);
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    white-space: nowrap;
 }
 
-.contact-btn::before {
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+.welcome-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.4));
+    border: 1.5px solid rgba(16, 185, 129, 0.6);
+    border-radius: 5px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.welcome-btn:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(5, 150, 105, 0.5));
+    border-color: rgba(52, 211, 153, 0.8);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+}
+
+.welcome-btn svg:first-child {
+    flex-shrink: 0;
+}
+
+.welcome-btn .chevron {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.welcome-btn:hover .chevron {
+    transform: translateY(2px);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 200px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(15px);
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1100;
+    overflow: hidden;
+}
+
+.user-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    color: #064e3b;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+}
+
+.logout-item {
+    color: #dc2626;
+}
+
+.logout-item:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+}
+
+.logout-item svg {
+    color: #dc2626;
+}
+
+.welcome-text {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.4));
+    border: 1.5px solid rgba(16, 185, 129, 0.6);
+    border-radius: 5px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    white-space: nowrap;
+}
+
+.login-btn::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -271,12 +571,12 @@ nav {
     transition: width 0.5s ease, height 0.5s ease;
 }
 
-.contact-btn span {
+.login-btn span {
     position: relative;
     z-index: 1;
 }
 
-.contact-btn:hover {
+.login-btn:hover {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(5, 150, 105, 0.6));
     border-color: rgba(52, 211, 153, 1);
     transform: translateY(-2px);
@@ -285,7 +585,7 @@ nav {
         0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.contact-btn:hover::before {
+.login-btn:hover::before {
     width: 300px;
     height: 300px;
 }
@@ -378,12 +678,17 @@ nav {
     transform: translateX(0);
 }
 
-.mobile-menu.active li:nth-child(1) { transition-delay: 0.1s; }
-.mobile-menu.active li:nth-child(2) { transition-delay: 0.15s; }
-.mobile-menu.active li:nth-child(3) { transition-delay: 0.2s; }
-.mobile-menu.active li:nth-child(4) { transition-delay: 0.25s; }
-.mobile-menu.active li:nth-child(5) { transition-delay: 0.3s; }
-.mobile-menu.active li:nth-child(6) { transition-delay: 0.35s; }
+.mobile-menu.active li:nth-child(1) { transition-delay: 0s; }
+.mobile-menu.active li:nth-child(2) { transition-delay: 0.05s; }
+.mobile-menu.active li:nth-child(3) { transition-delay: 0.1s; }
+.mobile-menu.active li:nth-child(4) { transition-delay: 0.15s; }
+.mobile-menu.active li:nth-child(5) { transition-delay: 0.2s; }
+.mobile-menu.active li:nth-child(6) { transition-delay: 0.25s; }
+.mobile-menu.active li:nth-child(7) { transition-delay: 0.3s; }
+.mobile-menu.active li:nth-child(8) { transition-delay: 0.35s; }
+.mobile-menu.active li:nth-child(9) { transition-delay: 0.4s; }
+.mobile-menu.active li:nth-child(10) { transition-delay: 0.45s; }
+.mobile-menu.active li:nth-child(11) { transition-delay: 0.5s; }
 
 .mobile-menu a {
     display: block;
@@ -436,6 +741,192 @@ nav {
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
 }
 
+.mobile-login {
+    margin-top: 10px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.4));
+    border: 1.5px solid rgba(16, 185, 129, 0.6) !important;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+.mobile-login:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5), rgba(5, 150, 105, 0.6));
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+}
+
+.mobile-user-info {
+    margin-top: 0;
+    padding: 25px 20px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.35));
+    border: none !important;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.4) !important;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    flex-shrink: 0;
+}
+
+.user-avatar svg {
+    color: white;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.user-greeting {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.user-name {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.menu-divider {
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(16, 185, 129, 0.3) 50%, 
+        transparent);
+    margin: 10px 0;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+}
+
+.mobile-logout {
+    margin-top: 5px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.4));
+    border: 1.5px solid rgba(239, 68, 68, 0.6) !important;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.mobile-logout:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(220, 38, 38, 0.6));
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h2 {
+    color: #064e3b;
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.modal-content p {
+    color: #059669;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.modal-buttons button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
 body.menu-open {
     overflow: hidden;
 }
@@ -460,20 +951,37 @@ body.menu-open::before {
 
 @media (max-width: 1024px) {
     nav {
-        padding: 20px 30px;
+        padding: 18px 30px;
+        gap: 30px;
     }
     
     .nav-center ul {
-        gap: 30px;
+        gap: 28px;
+    }
+
+    .nav-center a {
+        font-size: 12px;
+        letter-spacing: 1.5px;
+    }
+
+    .logo {
+        font-size: 24px;
+        letter-spacing: 2px;
+    }
+
+    .logo-icon {
+        font-size: 28px;
     }
 }
 
 @media (max-width: 768px) {
     nav {
-        padding: 18px 25px;
+        grid-template-columns: auto auto;
+        padding: 16px 20px;
+        gap: 20px;
     }
     
-    .nav-center ul {
+    .nav-center {
         display: none;
     }
     
@@ -482,21 +990,43 @@ body.menu-open::before {
     }
     
     .logo {
-        font-size: 24px;
+        font-size: 22px;
     }
     
     .logo-icon {
-        font-size: 28px;
+        font-size: 26px;
     }
     
-    .contact-btn {
+    .login-btn {
         padding: 10px 20px;
         font-size: 12px;
+        letter-spacing: 1.5px;
+    }
+
+    .welcome-btn {
+        font-size: 11px;
+        padding: 10px 15px;
+        gap: 8px;
+        letter-spacing: 1px;
+    }
+
+    .welcome-btn svg:first-child {
+        width: 16px;
+        height: 16px;
+    }
+
+    .welcome-btn .chevron {
+        width: 14px;
+        height: 14px;
+    }
+}
+        height: 14px;
     }
 }
 
 @media (max-width: 480px) {
-    .contact-btn {
+    .login-btn,
+    .welcome-btn {
         display: none;
     }
 
