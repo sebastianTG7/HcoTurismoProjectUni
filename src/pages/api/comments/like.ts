@@ -77,7 +77,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     } else {
       // Dar like
+      const allLikes = await db.select().from(CommentLike);
+      const maxId = allLikes.length > 0 
+        ? Math.max(...allLikes.map(l => l.id))
+        : 0;
+      const newId = maxId + 1;
+
       await db.insert(CommentLike).values({
+        id: newId,
         commentId,
         userId: session.id,
         createdAt: new Date()
