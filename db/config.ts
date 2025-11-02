@@ -11,7 +11,38 @@ const User = defineTable({
   }
 });
 
+const Comment = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    userId: column.number({ references: () => User.columns.id }),
+    section: column.text(), // 'historia', 'cultura', 'gastronomia', 'naturaleza', 'turismo'
+    content: column.text(),
+    likes: column.number({ default: 0 }),
+    createdAt: column.date({ default: new Date() }),
+    updatedAt: column.date({ optional: true })
+  }
+});
+
+const CommentReport = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    commentId: column.number({ references: () => Comment.columns.id }),
+    reportedBy: column.number({ references: () => User.columns.id }),
+    reason: column.text(),
+    createdAt: column.date({ default: new Date() })
+  }
+});
+
+const CommentLike = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    commentId: column.number({ references: () => Comment.columns.id }),
+    userId: column.number({ references: () => User.columns.id }),
+    createdAt: column.date({ default: new Date() })
+  }
+});
+
 // https://astro.build/db/config
 export default defineDb({
-  tables: { User }
+  tables: { User, Comment, CommentReport, CommentLike }
 });

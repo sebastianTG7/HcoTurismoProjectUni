@@ -1,0 +1,686 @@
+---
+interface Props {
+  section: string;
+}
+
+const { section } = Astro.props;
+
+// Verificar sesión del usuario
+const sessionCookie = Astro.cookies.get('session');
+let currentUser = null;
+
+if (sessionCookie) {
+  try {
+    currentUser = JSON.parse(sessionCookie.value);
+  } catch (e) {
+    // Sesión inválida
+  }
+}
+---
+
+<section class="comments-section" id="comments">
+  <div class="comments-container">
+    <h2 class="comments-title">
+      💬 Comentarios
+      <span class="comments-count" id="comments-count">0</span>
+    </h2>
+
+    {currentUser ? (
+      <div class="comment-form">
+        <div class="user-info">
+          <div class="user-avatar">{currentUser.nombre.charAt(0).toUpperCase()}</div>
+          <span class="user-name">{currentUser.nombre}</span>
+        </div>
+        <textarea 
+          id="comment-input" 
+          placeholder="Comparte tu opinión sobre esta sección..."
+          maxlength="1000"
+        ></textarea>
+        <div class="form-actions">
+          <span class="char-counter">
+            <span id="char-count">0</span>/1000
+          </span>
+          <button id="submit-comment" class="btn-submit">Publicar Comentario</button>
+        </div>
+      </div>
+    ) : (
+      <div class="login-prompt">
+        <p>🔒 Debes <a href="/login">iniciar sesión</a> para dejar un comentario</p>
+      </div>
+    )}
+
+    <div class="comments-list" id="comments-list">
+      <div class="loading">Cargando comentarios...</div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal de Edición -->
+<div id="edit-modal" class="modal">
+  <div class="modal-content">
+    <h3>Editar Comentario</h3>
+    <textarea id="edit-comment-input" maxlength="1000"></textarea>
+    <div class="modal-actions">
+      <button id="cancel-edit" class="btn-cancel">Cancelar</button>
+      <button id="save-edit" class="btn-save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Reporte -->
+<div id="report-modal" class="modal">
+  <div class="modal-content">
+    <h3>Reportar Comentario</h3>
+    <p>¿Por qué deseas reportar este comentario?</p>
+    <textarea id="report-reason" placeholder="Describe el motivo..." maxlength="500"></textarea>
+    <div class="modal-actions">
+      <button id="cancel-report" class="btn-cancel">Cancelar</button>
+      <button id="submit-report" class="btn-save">Enviar Reporte</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.comments-section {
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 4rem 2rem;
+}
+
+.comments-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.comments-title {
+  font-size: 2.5rem;
+  color: #064e3b;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.comments-count {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 1.2rem;
+}
+
+.comment-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #064e3b;
+}
+
+#comment-input, #edit-comment-input, #report-reason {
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s;
+}
+
+#comment-input:focus, #edit-comment-input:focus, #report-reason:focus {
+  outline: none;
+  border-color: #10b981;
+}
+
+.form-actions, .modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.char-counter {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.btn-submit, .btn-save {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-submit:hover, .btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-prompt {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-prompt a {
+  color: #10b981;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-prompt a:hover {
+  text-decoration: underline;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.loading, .no-comments {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+  background: white;
+  border-radius: 12px;
+}
+
+.comment-item {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s;
+}
+
+.comment-item:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.comment-user {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.comment-user-info h4 {
+  color: #064e3b;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.comment-date {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-action:hover {
+  background: #f1f5f9;
+  color: #064e3b;
+}
+
+.btn-action.danger:hover {
+  color: #dc2626;
+}
+
+.comment-content {
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
+.comment-footer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn-like {
+  background: none;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  color: #64748b;
+}
+
+.btn-like:hover {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.btn-like.liked {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  border-color: transparent;
+}
+
+.btn-report {
+  color: #64748b;
+  font-size: 0.85rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.3rem;
+}
+
+.btn-report:hover {
+  color: #dc2626;
+}
+
+.edited-badge {
+  color: #64748b;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+  color: #064e3b;
+  margin-bottom: 1rem;
+}
+
+.btn-cancel {
+  background: #e2e8f0;
+  color: #475569;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .comments-title {
+    font-size: 2rem;
+  }
+
+  .comment-form {
+    padding: 1.5rem;
+  }
+
+  .form-actions, .modal-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-submit, .btn-save, .btn-cancel {
+    width: 100%;
+  }
+}
+</style>
+
+<script define:vars={{ section, currentUser }}>
+let editingCommentId = null;
+let reportingCommentId = null;
+
+// Cargar comentarios
+async function loadComments() {
+  try {
+    const response = await fetch(`/api/comments/get?section=${section}`);
+    const data = await response.json();
+    
+    const commentsList = document.getElementById('comments-list');
+    const commentsCount = document.getElementById('comments-count');
+    
+    if (!data.comments || data.comments.length === 0) {
+      commentsList.innerHTML = '<div class="no-comments">No hay comentarios aún. ¡Sé el primero en comentar!</div>';
+      commentsCount.textContent = '0';
+      return;
+    }
+
+    commentsCount.textContent = data.comments.length;
+    
+    commentsList.innerHTML = data.comments.map(comment => `
+      <div class="comment-item">
+        <div class="comment-header">
+          <div class="comment-user">
+            <div class="comment-avatar">${comment.user.nombre.charAt(0).toUpperCase()}</div>
+            <div class="comment-user-info">
+              <h4>${comment.user.nombre}</h4>
+              <span class="comment-date">${formatDate(comment.createdAt)}</span>
+            </div>
+          </div>
+          ${comment.isOwner ? `
+            <div class="comment-actions">
+              <button class="btn-action" onclick="editComment(${comment.id}, '${comment.content.replace(/'/g, "\\'")}')">✏️ Editar</button>
+              <button class="btn-action danger" onclick="deleteComment(${comment.id})">🗑️ Eliminar</button>
+            </div>
+          ` : ''}
+        </div>
+        <div class="comment-content">${escapeHtml(comment.content)}</div>
+        <div class="comment-footer">
+          <button 
+            class="btn-like ${comment.likedByUser ? 'liked' : ''}" 
+            onclick="toggleLike(${comment.id})"
+            ${!currentUser ? 'disabled' : ''}
+          >
+            ${comment.likedByUser ? '❤️' : '🤍'} ${comment.likes}
+          </button>
+          ${comment.updatedAt ? '<span class="edited-badge">(editado)</span>' : ''}
+          ${!comment.isOwner && currentUser ? `
+            <button class="btn-report" onclick="reportComment(${comment.id})">🚩 Reportar</button>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Error al cargar comentarios:', error);
+    document.getElementById('comments-list').innerHTML = '<div class="no-comments">Error al cargar comentarios</div>';
+  }
+}
+
+// Formatear fecha
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diff = now - date;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return 'Ahora';
+  if (minutes < 60) return `Hace ${minutes} min`;
+  if (hours < 24) return `Hace ${hours} h`;
+  if (days < 7) return `Hace ${days} días`;
+  
+  return date.toLocaleDateString('es-PE', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+}
+
+// Escapar HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Crear comentario
+const commentInput = document.getElementById('comment-input');
+const submitBtn = document.getElementById('submit-comment');
+const charCount = document.getElementById('char-count');
+
+if (commentInput) {
+  commentInput.addEventListener('input', () => {
+    charCount.textContent = commentInput.value.length;
+  });
+}
+
+if (submitBtn) {
+  submitBtn.addEventListener('click', async () => {
+    const content = commentInput.value.trim();
+    
+    if (!content) {
+      alert('Por favor escribe un comentario');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Publicando...';
+
+    try {
+      const response = await fetch('/api/comments/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ section, content })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        commentInput.value = '';
+        charCount.textContent = '0';
+        await loadComments();
+      } else {
+        alert(data.message || 'Error al publicar comentario');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al publicar comentario');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Publicar Comentario';
+    }
+  });
+}
+
+// Editar comentario
+window.editComment = (id, content) => {
+  editingCommentId = id;
+  const modal = document.getElementById('edit-modal');
+  const input = document.getElementById('edit-comment-input');
+  input.value = content;
+  modal.classList.add('active');
+};
+
+document.getElementById('cancel-edit')?.addEventListener('click', () => {
+  document.getElementById('edit-modal').classList.remove('active');
+  editingCommentId = null;
+});
+
+document.getElementById('save-edit')?.addEventListener('click', async () => {
+  const content = document.getElementById('edit-comment-input').value.trim();
+  
+  if (!content) {
+    alert('El comentario no puede estar vacío');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/comments/update', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commentId: editingCommentId, content })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      document.getElementById('edit-modal').classList.remove('active');
+      await loadComments();
+    } else {
+      alert(data.message || 'Error al actualizar comentario');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al actualizar comentario');
+  }
+});
+
+// Eliminar comentario
+window.deleteComment = async (id) => {
+  if (!confirm('¿Estás seguro de que quieres eliminar este comentario?')) {
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/comments/delete', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commentId: id })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      await loadComments();
+    } else {
+      alert(data.message || 'Error al eliminar comentario');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al eliminar comentario');
+  }
+};
+
+// Toggle like
+window.toggleLike = async (id) => {
+  try {
+    const response = await fetch('/api/comments/like', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commentId: id })
+    });
+
+    if (response.ok) {
+      await loadComments();
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+// Reportar comentario
+window.reportComment = (id) => {
+  reportingCommentId = id;
+  document.getElementById('report-modal').classList.add('active');
+};
+
+document.getElementById('cancel-report')?.addEventListener('click', () => {
+  document.getElementById('report-modal').classList.remove('active');
+  reportingCommentId = null;
+});
+
+document.getElementById('submit-report')?.addEventListener('click', async () => {
+  const reason = document.getElementById('report-reason').value.trim();
+  
+  if (!reason || reason.length < 5) {
+    alert('Por favor describe el motivo del reporte (mínimo 5 caracteres)');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/comments/report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commentId: reportingCommentId, reason })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message);
+      document.getElementById('report-modal').classList.remove('active');
+      document.getElementById('report-reason').value = '';
+    } else {
+      alert(data.message || 'Error al reportar comentario');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error al reportar comentario');
+  }
+});
+
+// Cargar comentarios al iniciar
+loadComments();
+</script>
