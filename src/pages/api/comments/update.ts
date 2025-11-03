@@ -71,7 +71,8 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
 
     const comment = comments[0];
 
-    if (comment.userId !== session.id) {
+    // Permitir edición si es el dueño O si es admin
+    if (comment.userId !== session.id && session.rol !== 'admin') {
       return new Response(JSON.stringify({ 
         message: 'No tienes permiso para editar este comentario' 
       }), {

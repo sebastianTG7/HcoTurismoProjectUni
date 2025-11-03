@@ -674,10 +674,10 @@ async function loadComments() {
               <span class="comment-date">${formatDate(comment.createdAt)}</span>
             </div>
           </div>
-          ${comment.isOwner ? `
+          ${comment.canEdit || comment.canDelete ? `
             <div class="comment-actions">
-              <button class="btn-action" onclick="editComment(${comment.id}, '${comment.content.replace(/'/g, "\\'")}')">✏️ Editar</button>
-              <button class="btn-action danger" onclick="deleteComment(${comment.id})">🗑️ Eliminar</button>
+              ${comment.canEdit ? `<button class="btn-action" onclick="editComment(${comment.id}, '${comment.content.replace(/'/g, "\\'")}')">✏️ Editar</button>` : ''}
+              ${comment.canDelete ? `<button class="btn-action danger" onclick="deleteComment(${comment.id})">🗑️ Eliminar</button>` : ''}
             </div>
           ` : ''}
         </div>

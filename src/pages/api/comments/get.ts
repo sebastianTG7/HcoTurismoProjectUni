@@ -20,10 +20,12 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     // Obtener sesión del usuario actual
     const sessionCookie = cookies.get('session');
     let currentUserId = null;
+    let isAdmin = false;
     if (sessionCookie) {
       try {
         const session = JSON.parse(sessionCookie.value);
         currentUserId = session.id;
+        isAdmin = session.rol === 'admin';
       } catch (e) {
         // Sesión inválida
       }
@@ -65,7 +67,9 @@ export const GET: APIRoute = async ({ url, cookies }) => {
           nombre: user?.nombre,
           usuario: user?.usuario
         },
-        isOwner: currentUserId === comment.userId
+        isOwner: currentUserId === comment.userId,
+        canEdit: currentUserId === comment.userId || isAdmin,
+        canDelete: currentUserId === comment.userId || isAdmin
       };
     }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 

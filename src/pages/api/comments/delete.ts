@@ -53,7 +53,8 @@ export const DELETE: APIRoute = async ({ request, cookies }) => {
 
     const comment = comments[0];
 
-    if (comment.userId !== session.id) {
+    // Permitir eliminación si es el dueño O si es admin
+    if (comment.userId !== session.id && session.rol !== 'admin') {
       return new Response(JSON.stringify({ 
         message: 'No tienes permiso para eliminar este comentario' 
       }), {

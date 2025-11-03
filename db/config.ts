@@ -7,6 +7,7 @@ const User = defineTable({
     usuario: column.text({ unique: true }),
     correo: column.text({ unique: true }),
     contrasena: column.text(),
+    rol: column.text({ default: 'usuario' }), // 'admin' o 'usuario'
     createdAt: column.date({ default: new Date() })
   }
 });

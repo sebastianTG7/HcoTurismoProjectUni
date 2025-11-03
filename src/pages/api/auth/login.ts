@@ -45,7 +45,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     cookies.set('session', JSON.stringify({
       id: user.id,
       usuario: user.usuario,
-      nombre: user.nombre
+      nombre: user.nombre,
+      rol: user.rol || 'usuario'
     }), {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 7 días
@@ -58,7 +59,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       user: {
         id: user.id,
         nombre: user.nombre,
-        usuario: user.usuario
+        usuario: user.usuario,
+        rol: user.rol || 'usuario'
       }
     }), {
       status: 200,
