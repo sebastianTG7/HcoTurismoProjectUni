@@ -1,0 +1,807 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Verificar que el usuario es admin
+const sessionCookie = Astro.cookies.get('session');
+let user = null;
+
+if (sessionCookie) {
+  try {
+    user = JSON.parse(sessionCookie.value);
+  } catch (e) {
+    // Invalid session
+  }
+}
+
+// Redirigir si no es admin
+if (!user || user.rol !== 'admin') {
+  return Astro.redirect('/');
+}
+---
+
+<Layout title="Panel de Administración - Huánuco">
+  <div class="admin-container">
+    <header class="admin-header">
+      <h1>🛡️ Panel de Administración</h1>
+      <p>Gestiona comentarios y reportes de todas las secciones</p>
+    </header>
+
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-section="all">Todos</button>
+      <button class="tab-btn" data-section="historia">Historia</button>
+      <button class="tab-btn" data-section="naturaleza">Naturaleza</button>
+      <button class="tab-btn" data-section="turismo">Turismo</button>
+      <button class="tab-btn" data-section="cultura">Cultura</button>
+      <button class="tab-btn" data-section="gastronomia">Gastronomía</button>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">Total Comentarios:</span>
+        <span class="stat-value" id="total-comments">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Reportados:</span>
+        <span class="stat-value reported" id="reported-comments">0</span>
+      </div>
+    </div>
+
+    <div class="comments-container">
+      <div id="admin-comments-list" class="admin-comments-list">
+        <div class="loading">Cargando comentarios...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Edición -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <h3>Editar Comentario</h3>
+      <textarea id="edit-comment-input" maxlength="1000"></textarea>
+      <div class="modal-actions">
+        <button id="cancel-edit" class="btn-cancel">Cancelar</button>
+        <button id="save-edit" class="btn-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación de Eliminación -->
+  <div id="delete-modal" class="modal">
+    <div class="modal-content">
+      <h3>Eliminar Comentario</h3>
+      <p>¿Estás seguro que quieres eliminar este comentario? Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button id="cancel-delete" class="btn-cancel">Cancelar</button>
+        <button id="confirm-delete" class="btn-delete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Éxito -->
+  <div id="success-modal" class="modal success-modal">
+    <div class="modal-content success-content">
+      <div class="success-icon">✓</div>
+      <p id="success-message">Operación exitosa</p>
+    </div>
+  </div>
+</Layout>
+
+<style is:global>
+.admin-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 100px 2rem 2rem;
+}
+
+.admin-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.admin-header h1 {
+  font-size: 2.5rem;
+  color: #064e3b;
+  margin-bottom: 0.5rem;
+}
+
+.admin-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.admin-tabs {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn {
+  padding: 0.8rem 1.5rem;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  color: #475569;
+}
+
+.tab-btn:hover {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-color: transparent;
+}
+
+.stats-bar {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: flex;
+  gap: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.stat-value.reported {
+  color: #ef4444;
+}
+
+.comments-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.admin-comment-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #e2e8f0;
+  transition: all 0.3s;
+}
+
+.admin-comment-item.reported {
+  border-left-color: #ef4444;
+  background: linear-gradient(to right, #fef2f2 0%, white 10%);
+}
+
+.comment-section-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.comment-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.user-details h4 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1rem;
+}
+
+.user-details span {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-admin-action {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-admin-action:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+.btn-admin-action.delete:hover {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.comment-content {
+  color: #334155;
+  line-height: 1.7;
+  margin: 1rem 0;
+  font-size: 1.05rem;
+}
+
+.report-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #dc2626;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.reports-list {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+}
+
+.reports-list h5 {
+  margin: 0 0 0.5rem;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+
+.report-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  padding: 0.8rem;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #fecaca;
+}
+
+.report-item:last-child {
+  margin-bottom: 0;
+}
+
+.report-info {
+  flex: 1;
+}
+
+.report-info strong {
+  color: #dc2626;
+  font-size: 0.85rem;
+}
+
+.report-info p {
+  margin: 0.3rem 0 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.btn-remove-report {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0 0.5rem;
+  transition: all 0.3s;
+}
+
+.btn-remove-report:hover {
+  color: #dc2626;
+  transform: scale(1.2);
+}
+
+.loading, .no-comments {
+  text-align: center;
+  padding: 3rem;
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* Modales */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+  color: #064e3b;
+  margin-bottom: 1rem;
+}
+
+#edit-comment-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s;
+}
+
+#edit-comment-input:focus {
+  outline: none;
+  border-color: #10b981;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.btn-cancel {
+  background: #e2e8f0;
+  color: #475569;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+  background: #cbd5e1;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  color: white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.success-modal {
+  z-index: 10001;
+}
+
+.success-content {
+  text-align: center;
+  padding: 2.5rem;
+  animation: successPop 0.3s ease-out;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 auto 1rem;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+}
+
+.success-content p {
+  color: #064e3b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header h1 {
+    font-size: 2rem;
+  }
+
+  .admin-tabs {
+    justify-content: center;
+  }
+
+  .tab-btn {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .stats-bar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .comment-meta {
+    flex-direction: column;
+  }
+
+  .comment-actions {
+    width: 100%;
+  }
+
+  .btn-admin-action {
+    flex: 1;
+  }
+}
+</style>
+
+<script>
+let currentSection = 'all';
+let editingCommentId = null;
+let deletingCommentId = null;
+let allComments = [];
+
+// Mostrar modal de éxito
+function showSuccess(message) {
+  const modal = document.getElementById('success-modal');
+  const messageEl = document.getElementById('success-message');
+  messageEl.textContent = message;
+  modal.classList.add('active');
+  setTimeout(() => {
+    modal.classList.remove('active');
+  }, 1500);
+}
+
+// Formatear fecha
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleString('es-PE', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Escapar HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Nombre de sección capitalizado
+function getSectionName(section) {
+  const names = {
+    'historia': 'Historia',
+    'naturaleza': 'Naturaleza',
+    'turismo': 'Turismo',
+    'cultura': 'Cultura',
+    'gastronomia': 'Gastronomía'
+  };
+  return names[section] || section;
+}
+
+// Cargar todos los comentarios
+async function loadAllComments() {
+  try {
+    const sections = ['historia', 'naturaleza', 'turismo', 'cultura', 'gastronomia'];
+    const promises = sections.map(section => 
+      fetch(`/api/admin/comments?section=${section}`).then(r => r.json())
+    );
+    
+    const results = await Promise.all(promises);
+    allComments = results.flatMap((data, index) => 
+      (data.comments || []).map(comment => ({
+        ...comment,
+        section: sections[index]
+      }))
+    );
+    
+    updateStats();
+    renderComments();
+  } catch (error) {
+    console.error('Error al cargar comentarios:', error);
+    document.getElementById('admin-comments-list').innerHTML = 
+      '<div class="no-comments">Error al cargar comentarios</div>';
+  }
+}
+
+// Actualizar estadísticas
+function updateStats() {
+  const total = allComments.length;
+  const reported = allComments.filter(c => c.reports && c.reports.length > 0).length;
+  
+  document.getElementById('total-comments').textContent = total;
+  document.getElementById('reported-comments').textContent = reported;
+}
+
+// Renderizar comentarios
+function renderComments() {
+  const filtered = currentSection === 'all' 
+    ? allComments 
+    : allComments.filter(c => c.section === currentSection);
+  
+  const container = document.getElementById('admin-comments-list');
+  
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="no-comments">No hay comentarios en esta sección</div>';
+    return;
+  }
+  
+  container.innerHTML = filtered.map(comment => `
+    <div class="admin-comment-item ${comment.reports && comment.reports.length > 0 ? 'reported' : ''}">
+      <span class="comment-section-badge">${getSectionName(comment.section)}</span>
+      
+      ${comment.reports && comment.reports.length > 0 ? `
+        <span class="report-badge">🚩 ${comment.reports.length} Reporte${comment.reports.length > 1 ? 's' : ''}</span>
+      ` : ''}
+      
+      <div class="comment-meta">
+        <div class="comment-user-info">
+          <div class="user-avatar">${comment.user.nombre.charAt(0).toUpperCase()}</div>
+          <div class="user-details">
+            <h4>${escapeHtml(comment.user.nombre)}</h4>
+            <span>${formatDate(comment.createdAt)}</span>
+          </div>
+        </div>
+        
+        <div class="comment-actions">
+          <button class="btn-admin-action" onclick="editComment(${comment.id}, '${escapeHtml(comment.content).replace(/'/g, "\\'")}')">
+            ✏️ Editar
+          </button>
+          <button class="btn-admin-action delete" onclick="deleteComment(${comment.id})">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+      
+      <div class="comment-content">${escapeHtml(comment.content)}</div>
+      
+      ${comment.reports && comment.reports.length > 0 ? `
+        <div class="reports-list">
+          <h5>📋 Reportes (${comment.reports.length}):</h5>
+          ${comment.reports.map(report => `
+            <div class="report-item">
+              <div class="report-info">
+                <strong>Por: ${escapeHtml(report.reportedByUser)}</strong>
+                <p>${escapeHtml(report.reason)}</p>
+              </div>
+              <button class="btn-remove-report" onclick="removeReport(${report.id})" title="Quitar reporte">
+                ✕
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+// Cambiar sección
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentSection = btn.dataset.section;
+    renderComments();
+  });
+});
+
+// Editar comentario
+window.editComment = (id, content) => {
+  editingCommentId = id;
+  const modal = document.getElementById('edit-modal');
+  const input = document.getElementById('edit-comment-input');
+  input.value = content;
+  modal.classList.add('active');
+};
+
+document.getElementById('cancel-edit')?.addEventListener('click', () => {
+  document.getElementById('edit-modal').classList.remove('active');
+  editingCommentId = null;
+});
+
+document.getElementById('save-edit')?.addEventListener('click', async () => {
+  const content = document.getElementById('edit-comment-input').value.trim();
+  
+  if (!content) {
+    showSuccess('El comentario no puede estar vacío');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/comments/update', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commentId: editingCommentId, content })
+    });
+
+    if (response.ok) {
+      document.getElementById('edit-modal').classList.remove('active');
+      await loadAllComments();
+      showSuccess('Comentario actualizado');
+    } else {
+      const data = await response.json();
+      showSuccess(data.message || 'Error al actualizar comentario');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    showSuccess('Error al actualizar comentario');
+  }
+});
+
+// Eliminar comentario
+window.deleteComment = (id) => {
+  deletingCommentId = id;
+  document.getElementById('delete-modal').classList.add('active');
+};
+
+document.getElementById('cancel-delete')?.addEventListener('click', () => {
+  document.getElementById('delete-modal').classList.remove('active');
+  deletingCommentId = null;
+});
+
+document.getElementById('confirm-delete')?.addEventListener('click', async () => {
+  try {
+    const response = await fetch('/api/comments/delete', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ commentId: deletingCommentId })
+    });
+
+    if (response.ok) {
+      document.getElementById('delete-modal').classList.remove('active');
+      await loadAllComments();
+      showSuccess('Comentario eliminado');
+    } else {
+      const data = await response.json();
+      showSuccess(data.message || 'Error al eliminar comentario');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    showSuccess('Error al eliminar comentario');
+  }
+});
+
+// Quitar reporte
+window.removeReport = async (reportId) => {
+  try {
+    const response = await fetch('/api/admin/remove-report', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reportId })
+    });
+
+    if (response.ok) {
+      await loadAllComments();
+      showSuccess('Reporte eliminado');
+    } else {
+      const data = await response.json();
+      showSuccess(data.message || 'Error al eliminar reporte');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    showSuccess('Error al eliminar reporte');
+  }
+};
+
+// Cargar comentarios al iniciar
+loadAllComments();
+</script>
+</Layout>
