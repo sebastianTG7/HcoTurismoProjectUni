@@ -80,6 +80,26 @@ if (sessionCookie) {
   </div>
 </div>
 
+<!-- Modal de Confirmación de Eliminación -->
+<div id="delete-modal" class="modal">
+  <div class="modal-content">
+    <h3>Eliminar Comentario</h3>
+    <p>¿Estás seguro que quieres eliminar este comentario? Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button id="cancel-delete" class="btn-cancel">Cancelar</button>
+      <button id="confirm-delete" class="btn-delete">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Éxito -->
+<div id="success-modal" class="modal success-modal">
+  <div class="modal-content success-content">
+    <div class="success-icon">✓</div>
+    <p id="success-message">Operación exitosa</p>
+  </div>
+</div>
+
 <style is:global>
 .comments-section {
   background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
@@ -527,6 +547,70 @@ if (sessionCookie) {
   background: #cbd5e1;
 }
 
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Modal de Éxito */
+.success-modal {
+  z-index: 10001;
+}
+
+.success-content {
+  text-align: center;
+  padding: 2.5rem;
+  animation: successPop 0.3s ease-out;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 auto 1rem;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+}
+
+.success-content p {
+  color: #064e3b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+@keyframes successPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 768px) {
   .comments-title {
     font-size: 2rem;
@@ -550,6 +634,18 @@ if (sessionCookie) {
 <script define:vars={{ section, currentUser }}>
 let editingCommentId = null;
 let reportingCommentId = null;
+let deletingCommentId = null;
+
+// Mostrar modal de éxito
+function showSuccess(message) {
+  const modal = document.getElementById('success-modal');
+  const messageEl = document.getElementById('success-message');
+  messageEl.textContent = message;
+  modal.classList.add('active');
+  setTimeout(() => {
+    modal.classList.remove('active');
+  }, 1500);
+}
 
 // Cargar comentarios
 async function loadComments() {
@@ -651,7 +747,7 @@ if (submitBtn) {
     const content = commentInput.value.trim();
     
     if (!content) {
-      alert('Por favor escribe un comentario');
+      showSuccess('Por favor escribe un comentario');
       return;
     }
 
@@ -671,12 +767,13 @@ if (submitBtn) {
         commentInput.value = '';
         charCount.textContent = '0';
         await loadComments();
+        showSuccess('Comentario publicado exitosamente');
       } else {
-        alert(data.message || 'Error al publicar comentario');
+        showSuccess(data.message || 'Error al publicar comentario');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error al publicar comentario');
+      showSuccess('Error al publicar comentario');
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Publicar Comentario';
@@ -702,7 +799,7 @@ document.getElementById('save-edit')?.addEventListener('click', async () => {
   const content = document.getElementById('edit-comment-input').value.trim();
   
   if (!content) {
-    alert('El comentario no puede estar vacío');
+    showSuccess('El comentario no puede estar vacío');
     return;
   }
 
@@ -718,40 +815,49 @@ document.getElementById('save-edit')?.addEventListener('click', async () => {
     if (response.ok) {
       document.getElementById('edit-modal').classList.remove('active');
       await loadComments();
+      showSuccess('Comentario actualizado');
     } else {
-      alert(data.message || 'Error al actualizar comentario');
+      showSuccess(data.message || 'Error al actualizar comentario');
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al actualizar comentario');
+    showSuccess('Error al actualizar comentario');
   }
 });
 
 // Eliminar comentario
-window.deleteComment = async (id) => {
-  if (!confirm('¿Estás seguro de que quieres eliminar este comentario?')) {
-    return;
-  }
+window.deleteComment = (id) => {
+  deletingCommentId = id;
+  document.getElementById('delete-modal').classList.add('active');
+};
 
+document.getElementById('cancel-delete')?.addEventListener('click', () => {
+  document.getElementById('delete-modal').classList.remove('active');
+  deletingCommentId = null;
+});
+
+document.getElementById('confirm-delete')?.addEventListener('click', async () => {
   try {
     const response = await fetch('/api/comments/delete', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ commentId: id })
+      body: JSON.stringify({ commentId: deletingCommentId })
     });
 
     const data = await response.json();
 
     if (response.ok) {
+      document.getElementById('delete-modal').classList.remove('active');
       await loadComments();
+      showSuccess('Comentario eliminado');
     } else {
-      alert(data.message || 'Error al eliminar comentario');
+      showSuccess(data.message || 'Error al eliminar comentario');
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al eliminar comentario');
+    showSuccess('Error al eliminar comentario');
   }
-};
+});
 
 // Toggle like
 window.toggleLike = async (id) => {
@@ -785,7 +891,7 @@ document.getElementById('submit-report')?.addEventListener('click', async () => 
   const reason = document.getElementById('report-reason').value.trim();
   
   if (!reason || reason.length < 5) {
-    alert('Por favor describe el motivo del reporte (mínimo 5 caracteres)');
+    showSuccess('Por favor describe el motivo del reporte (mínimo 5 caracteres)');
     return;
   }
 
@@ -799,15 +905,15 @@ document.getElementById('submit-report')?.addEventListener('click', async () => 
     const data = await response.json();
 
     if (response.ok) {
-      alert(data.message);
       document.getElementById('report-modal').classList.remove('active');
       document.getElementById('report-reason').value = '';
+      showSuccess('Reporte enviado exitosamente');
     } else {
-      alert(data.message || 'Error al reportar comentario');
+      showSuccess(data.message || 'Error al reportar comentario');
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('Error al reportar comentario');
+    showSuccess('Error al reportar comentario');
   }
 });
 
