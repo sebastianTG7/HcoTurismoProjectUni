@@ -87,10 +87,182 @@ import Footer from '../components/Footer.astro';
         </div>
     </div>
 
+    <!-- Modal de Contraseña Temporal -->
+    <div id="tempPasswordModal" class="temp-password-modal">
+        <div class="temp-password-content">
+            <div class="temp-password-icon">🔑</div>
+            <h2>Contraseña Temporal Generada</h2>
+            <p class="temp-password-info">Copia esta información para iniciar sesión:</p>
+            
+            <div class="credential-box">
+                <label>Usuario:</label>
+                <div class="credential-value">
+                    <span id="tempUsername"></span>
+                    <button class="copy-btn" onclick="copyToClipboard('tempUsername')">📋 Copiar</button>
+                </div>
+            </div>
+
+            <div class="credential-box">
+                <label>Contraseña Temporal:</label>
+                <div class="credential-value">
+                    <span id="tempPassword"></span>
+                    <button class="copy-btn" onclick="copyToClipboard('tempPassword')">📋 Copiar</button>
+                </div>
+            </div>
+
+            <p class="temp-password-warning">⚠️ Guarda esta contraseña ahora. Cámbiala desde tu perfil después de iniciar sesión.</p>
+            
+            <button id="closeTempPasswordModal" class="btn-close-temp">Entendido</button>
+        </div>
+    </div>
+
     <Footer />
 </Layout>
 
 <style>
+.temp-password-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10001;
+    align-items: center;
+    justify-content: center;
+}
+
+.temp-password-modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.temp-password-content {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    text-align: center;
+    animation: slideUp 0.3s ease-out;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+}
+
+.temp-password-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+    animation: scaleIn 0.5s ease-out;
+}
+
+.temp-password-content h2 {
+    color: #064e3b;
+    font-size: 1.8rem;
+    margin: 0 0 1rem;
+}
+
+.temp-password-info {
+    color: #6b7280;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.credential-box {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.credential-box label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.credential-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.credential-value span {
+    flex: 1;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2937;
+    font-family: 'Courier New', monospace;
+    background: white;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+}
+
+.copy-btn {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.copy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.copy-btn:active {
+    transform: translateY(0);
+}
+
+.temp-password-warning {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid #f59e0b;
+}
+
+.btn-close-temp {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
+}
+
+.btn-close-temp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
 .success-modal {
     display: none;
     position: fixed;
@@ -311,12 +483,15 @@ import Footer from '../components/Footer.astro';
             const data = await response.json();
 
             if (response.ok) {
-                // Mostrar la contraseña temporal en un alert
-                alert(`✅ Contraseña temporal generada:\n\n${data.tempPassword}\n\n⚠️ Copia esta contraseña ahora. Úsala para iniciar sesión y luego cámbiala desde tu perfil.\n\nTu usuario es: ${data.usuario}`);
+                // Mostrar modal con la contraseña temporal
+                document.getElementById('tempUsername').textContent = data.usuario;
+                document.getElementById('tempPassword').textContent = data.tempPassword;
                 
-                // Volver al login
+                const tempPasswordModal = document.getElementById('tempPasswordModal');
+                tempPasswordModal?.classList.add('active');
+                
+                // Volver al login cuando cierre el modal
                 recoveryForm.classList.remove('active');
-                loginForm.classList.add('active');
                 recoveryForm.reset();
             } else {
                 showMessage(data.message || 'Correo no encontrado', 'error');
@@ -325,6 +500,28 @@ import Footer from '../components/Footer.astro';
             showMessage('Error de conexión', 'error');
         }
     });
+
+    // Cerrar modal de contraseña temporal
+    document.getElementById('closeTempPasswordModal')?.addEventListener('click', () => {
+        const tempPasswordModal = document.getElementById('tempPasswordModal');
+        tempPasswordModal?.classList.remove('active');
+        loginForm.classList.add('active');
+    });
+
+    // Función para copiar al portapapeles
+    window.copyToClipboard = (elementId) => {
+        const text = document.getElementById(elementId).textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Copiado';
+            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = 'linear-gradient(135deg, #3b82f6, #2563eb)';
+            }, 2000);
+        });
+    };
 
     function showMessage(text: string, type: 'success' | 'error') {
         message.textContent = text;
