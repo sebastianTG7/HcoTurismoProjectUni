@@ -29,15 +29,16 @@ export const GET: APIRoute = async ({ url, cookies }) => {
       }
     }
 
-    // Obtener comentarios de la sección
-    const comments = await db.select().from(Comment).where(eq(Comment.section, section));
+    // Obtener todos los datos en paralelo (sin esperar)
+    const [comments, users, likes] = await Promise.all([
+      db.select().from(Comment).where(eq(Comment.section, section)),
+      db.select().from(User),
+      db.select().from(CommentLike)
+    ]);
     
-    // Obtener usuarios
-    const users = await db.select().from(User);
     const userMap = new Map(users.map(u => [u.id, u]));
 
-    // Obtener likes
-    const likes = await db.select().from(CommentLike);
+    // Crear mapa de likes
     const likesMap = new Map<number, Set<number>>();
     likes.forEach(like => {
       if (!likesMap.has(like.commentId)) {

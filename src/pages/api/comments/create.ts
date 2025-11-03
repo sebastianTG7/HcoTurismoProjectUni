@@ -68,16 +68,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    // Obtener el último ID para generar uno nuevo
-    const allComments = await db.select().from(Comment);
-    const maxId = allComments.length > 0 
-      ? Math.max(...allComments.map(c => c.id))
-      : 0;
-    const newId = maxId + 1;
-
-    // Insertar comentario
+    // Insertar comentario (autoincrement genera el ID)
     const result = await db.insert(Comment).values({
-      id: newId,
       userId: session.id,
       section,
       content: content.trim(),

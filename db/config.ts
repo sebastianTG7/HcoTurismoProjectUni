@@ -13,7 +13,7 @@ const User = defineTable({
 
 const Comment = defineTable({
   columns: {
-    id: column.number({ primaryKey: true }),
+    id: column.number({ primaryKey: true, autoIncrement: true }),
     userId: column.number({ references: () => User.columns.id }),
     section: column.text(), // 'historia', 'cultura', 'gastronomia', 'naturaleza', 'turismo'
     content: column.text(),
@@ -25,7 +25,7 @@ const Comment = defineTable({
 
 const CommentReport = defineTable({
   columns: {
-    id: column.number({ primaryKey: true }),
+    id: column.number({ primaryKey: true, autoIncrement: true }),
     commentId: column.number({ references: () => Comment.columns.id }),
     reportedBy: column.number({ references: () => User.columns.id }),
     reason: column.text(),
@@ -35,7 +35,7 @@ const CommentReport = defineTable({
 
 const CommentLike = defineTable({
   columns: {
-    id: column.number({ primaryKey: true }),
+    id: column.number({ primaryKey: true, autoIncrement: true }),
     commentId: column.number({ references: () => Comment.columns.id }),
     userId: column.number({ references: () => User.columns.id }),
     createdAt: column.date({ default: new Date() })

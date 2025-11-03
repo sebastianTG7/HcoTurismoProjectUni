@@ -86,15 +86,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    // Crear reporte
-    const allReports = await db.select().from(CommentReport);
-    const maxId = allReports.length > 0 
-      ? Math.max(...allReports.map(r => r.id))
-      : 0;
-    const newId = maxId + 1;
-
+    // Crear reporte (autoincrement genera el ID)
     await db.insert(CommentReport).values({
-      id: newId,
       commentId,
       reportedBy: session.id,
       reason: reason.trim(),

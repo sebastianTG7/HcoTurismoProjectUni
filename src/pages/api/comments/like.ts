@@ -68,6 +68,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         )
       );
 
+      // Decrementar contador en Comment
+      await db.update(Comment)
+        .set({ likes: Math.max(0, comments[0].likes - 1) })
+        .where(eq(Comment.id, commentId));
+
       return new Response(JSON.stringify({ 
         message: 'Like removido',
         liked: false
@@ -75,20 +80,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
-    } else {
+    }else {
       // Dar like
-      const allLikes = await db.select().from(CommentLike);
-      const maxId = allLikes.length > 0 
-        ? Math.max(...allLikes.map(l => l.id))
-        : 0;
-      const newId = maxId + 1;
-
       await db.insert(CommentLike).values({
-        id: newId,
         commentId,
         userId: session.id,
         createdAt: new Date()
       });
+
+      // Incrementar contador en Comment
+      await db.update(Comment)
+        .set({ likes: comments[0].likes + 1 })
+        .where(eq(Comment.id, commentId));
 
       return new Response(JSON.stringify({ 
         message: 'Like agregado',
