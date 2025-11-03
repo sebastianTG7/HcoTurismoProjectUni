@@ -969,18 +969,39 @@ body.menu-open::before {
     to { opacity: 1; }
 }
 
-@media (max-width: 1024px) {
+/* === BREAKPOINTS RESPONSIVE === */
+
+/* Pantallas muy grandes (laptops XL) */
+@media (max-width: 1400px) {
+    nav {
+        padding: 18px 35px;
+        gap: 32px;
+    }
+
+    .nav-center ul {
+        gap: 20px;
+    }
+
+    .nav-center a {
+        font-size: 13px;
+        padding: 10px 15px;
+    }
+}
+
+/* Laptops estándar */
+@media (max-width: 1200px) {
     nav {
         padding: 18px 30px;
-        gap: 30px;
+        gap: 28px;
     }
     
     .nav-center ul {
-        gap: 28px;
+        gap: 16px;
     }
 
     .nav-center a {
         font-size: 12px;
+        padding: 10px 12px;
         letter-spacing: 1.5px;
     }
 
@@ -991,22 +1012,6 @@ body.menu-open::before {
 
     .logo-icon {
         font-size: 28px;
-    }
-}
-
-@media (max-width: 1024px) {
-    nav {
-        gap: 20px;
-        padding: 16px 30px;
-    }
-
-    .nav-center ul {
-        gap: 15px;
-    }
-
-    .nav-center a {
-        font-size: 12px;
-        padding: 10px 12px;
     }
 
     .welcome-btn {
@@ -1020,6 +1025,32 @@ body.menu-open::before {
     }
 }
 
+/* Tablets grandes y laptops pequeños */
+@media (max-width: 1024px) {
+    nav {
+        gap: 20px;
+        padding: 16px 25px;
+    }
+
+    .nav-center ul {
+        gap: 12px;
+    }
+
+    .nav-center a {
+        font-size: 11px;
+        padding: 10px 10px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .logo-icon {
+        font-size: 26px;
+    }
+}
+
+/* Tablets */
 @media (max-width: 768px) {
     nav {
         grid-template-columns: auto 1fr;
