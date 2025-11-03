@@ -63,10 +63,10 @@ import Footer from '../components/Footer.astro';
 
             <!-- Formulario de Recuperación de Contraseña -->
             <form id="recoveryForm" class="auth-form">
-                <p class="recovery-info">Ingresa tu usuario y te generaremos una contraseña temporal</p>
+                <p class="recovery-info">Ingresa tu correo electrónico y te generaremos una contraseña temporal</p>
                 <div class="form-group">
-                    <label for="recovery-usuario">Usuario</label>
-                    <input type="text" id="recovery-usuario" name="usuario" required />
+                    <label for="recovery-correo">Correo Electrónico</label>
+                    <input type="email" id="recovery-correo" name="correo" required />
                 </div>
                 <button type="submit" class="submit-btn">Generar Contraseña Temporal</button>
                 <div class="form-footer">
@@ -304,7 +304,7 @@ import Footer from '../components/Footer.astro';
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    usuario: formData.get('usuario')
+                    correo: formData.get('correo')
                 })
             });
 
@@ -312,14 +312,14 @@ import Footer from '../components/Footer.astro';
 
             if (response.ok) {
                 // Mostrar la contraseña temporal en un alert
-                alert(`✅ Contraseña temporal generada:\n\n${data.tempPassword}\n\n⚠️ Copia esta contraseña ahora. Úsala para iniciar sesión y luego cámbiala desde tu perfil.`);
+                alert(`✅ Contraseña temporal generada:\n\n${data.tempPassword}\n\n⚠️ Copia esta contraseña ahora. Úsala para iniciar sesión y luego cámbiala desde tu perfil.\n\nTu usuario es: ${data.usuario}`);
                 
                 // Volver al login
                 recoveryForm.classList.remove('active');
                 loginForm.classList.add('active');
                 recoveryForm.reset();
             } else {
-                showMessage(data.message || 'Usuario no encontrado', 'error');
+                showMessage(data.message || 'Correo no encontrado', 'error');
             }
         } catch (error) {
             showMessage('Error de conexión', 'error');

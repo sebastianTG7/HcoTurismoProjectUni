@@ -6,23 +6,23 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { usuario } = await request.json();
+    const { correo } = await request.json();
 
-    if (!usuario) {
+    if (!correo) {
       return new Response(JSON.stringify({ 
-        message: 'Usuario requerido' 
+        message: 'Correo requerido' 
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    // Buscar usuario
-    const users = await db.select().from(User).where(eq(User.usuario, usuario));
+    // Buscar usuario por correo
+    const users = await db.select().from(User).where(eq(User.correo, correo));
     
     if (users.length === 0) {
       return new Response(JSON.stringify({ 
-        message: 'Usuario no encontrado' 
+        message: 'No se encontró una cuenta con ese correo' 
       }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
@@ -41,7 +41,8 @@ export const POST: APIRoute = async ({ request }) => {
 
     return new Response(JSON.stringify({ 
       message: 'Contraseña temporal generada',
-      tempPassword: tempPassword
+      tempPassword: tempPassword,
+      usuario: user.usuario
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
