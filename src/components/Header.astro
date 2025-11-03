@@ -54,6 +54,13 @@ if (sessionCookie) {
                                 Panel Administrador
                             </a>
                         )}
+                        <a href="#" id="changePasswordBtn" class="dropdown-item password-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            Cambiar Contraseña
+                        </a>
                         <a href="#" id="desktopLogoutBtn" class="dropdown-item logout-item">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -119,6 +126,32 @@ if (sessionCookie) {
     </div>
 </header>
 
+<!-- Modal de cambio de contraseña -->
+<div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <h2>Cambiar Contraseña</h2>
+        <form id="changePasswordForm">
+            <div class="form-group">
+                <label>Contraseña Actual</label>
+                <input type="password" id="currentPassword" required />
+            </div>
+            <div class="form-group">
+                <label>Nueva Contraseña</label>
+                <input type="password" id="newPassword" required />
+            </div>
+            <div class="form-group">
+                <label>Confirmar Nueva Contraseña</label>
+                <input type="password" id="confirmNewPassword" required />
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" class="btn-confirm">Guardar</button>
+                <button type="button" id="cancelChangePassword" class="btn-cancel">Cancelar</button>
+            </div>
+        </form>
+        <div id="passwordMessage" class="password-message"></div>
+    </div>
+</div>
+
 <!-- Modal de confirmación de cierre de sesión -->
 <div id="logoutModal" class="modal">
     <div class="modal-content">
@@ -145,6 +178,11 @@ if (sessionCookie) {
         const cancelLogout = document.getElementById('cancelLogout');
         const userMenuBtn = document.getElementById('userMenuBtn');
         const userDropdown = document.getElementById('userDropdown');
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        const changePasswordModal = document.getElementById('changePasswordModal');
+        const cancelChangePassword = document.getElementById('cancelChangePassword');
+        const changePasswordForm = document.getElementById('changePasswordForm');
+        const passwordMessage = document.getElementById('passwordMessage');
         
         // Scroll functionality
         window.addEventListener('scroll', () => {
@@ -252,11 +290,92 @@ if (sessionCookie) {
             });
         }
 
+        // Change Password functionality
+        if (changePasswordBtn) {
+            changePasswordBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                userDropdown?.classList.remove('active');
+                changePasswordModal.classList.add('active');
+                document.body.classList.add('modal-open');
+            });
+        }
+
+        if (cancelChangePassword) {
+            cancelChangePassword.addEventListener('click', () => {
+                changePasswordModal.classList.remove('active');
+                document.body.classList.remove('modal-open');
+                changePasswordForm.reset();
+                passwordMessage.style.display = 'none';
+            });
+        }
+
+        if (changePasswordForm) {
+            changePasswordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+                if (newPassword !== confirmNewPassword) {
+                    passwordMessage.textContent = 'Las nuevas contraseñas no coinciden';
+                    passwordMessage.className = 'password-message error';
+                    return;
+                }
+
+                if (newPassword.length < 4) {
+                    passwordMessage.textContent = 'La contraseña debe tener al menos 4 caracteres';
+                    passwordMessage.className = 'password-message error';
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/auth/change-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            currentPassword,
+                            newPassword
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        passwordMessage.textContent = '¡Contraseña actualizada exitosamente!';
+                        passwordMessage.className = 'password-message success';
+                        changePasswordForm.reset();
+                        
+                        setTimeout(() => {
+                            changePasswordModal.classList.remove('active');
+                            document.body.classList.remove('modal-open');
+                            passwordMessage.style.display = 'none';
+                        }, 2000);
+                    } else {
+                        passwordMessage.textContent = data.message || 'Error al cambiar contraseña';
+                        passwordMessage.className = 'password-message error';
+                    }
+                } catch (error) {
+                    passwordMessage.textContent = 'Error de conexión';
+                    passwordMessage.className = 'password-message error';
+                }
+            });
+        }
+
         // Close modal when clicking outside
         logoutModal?.addEventListener('click', (e) => {
             if (e.target === logoutModal) {
                 logoutModal.classList.remove('active');
                 document.body.classList.remove('modal-open');
+            }
+        });
+
+        changePasswordModal?.addEventListener('click', (e) => {
+            if (e.target === changePasswordModal) {
+                changePasswordModal.classList.remove('active');
+                document.body.classList.remove('modal-open');
+                changePasswordForm.reset();
+                passwordMessage.style.display = 'none';
             }
         });
     });
@@ -565,6 +684,19 @@ nav {
 
 .admin-item svg {
     color: #10b981;
+}
+
+.password-item {
+    color: #3b82f6;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.password-item:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+}
+
+.password-item svg {
+    color: #3b82f6;
 }
 
 .welcome-text {
@@ -941,6 +1073,52 @@ nav {
     background: linear-gradient(135deg, #059669, #047857);
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    color: #064e3b;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #10b981;
+}
+
+.password-message {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    display: none;
+}
+
+.password-message.success {
+    background: #d1fae5;
+    color: #065f46;
+    display: block;
+}
+
+.password-message.error {
+    background: #fee2e2;
+    color: #991b1b;
+    display: block;
 }
 
 body.modal-open {
