@@ -8,6 +8,8 @@ import naturaleza from '../assets/imagenes/naturaleza.webp';
 import cultura from '../assets/imagenes/cultura.webp';
 import pachamanca from '../assets/imagenes/pachamanca.webp';
 import turismo from '../assets/imagenes/turismo.webp';
+
+
 ---
 
 <Layout title="Huánuco - Región Natural y Cultural del Perú">
@@ -120,35 +122,32 @@ import turismo from '../assets/imagenes/turismo.webp';
 	</section>
 
 	<section class="about">
+        <div class="about-overlay"></div> <!-- New overlay div -->
 		<div class="container">
 			<div class="about-content">
 				<div class="about-text">
-					<h2>¿Dónde Estamos?</h2>
+					<h2>¿Dónde Esta Huánuco?</h2>
 					<p>Huánuco se encuentra en la región centro-oriental del Perú, en una posición estratégica que conecta los Andes con la Amazonía. Nuestra ubicación privilegiada nos permite tener una diversidad geográfica única.</p>
 					<div class="location-details">
 						<div class="detail-item">
-							<span class="icon">📍</span>
 							<div>
 								<strong>Ubicación:</strong>
 								<p>Centro-oriente del Perú</p>
 							</div>
 						</div>
 						<div class="detail-item">
-							<span class="icon">🏔️</span>
 							<div>
 								<strong>Altitud:</strong>
 								<p>1,894 msnm (ciudad)</p>
 							</div>
 						</div>
 						<div class="detail-item">
-							<span class="icon">🗺️</span>
 							<div>
 								<strong>Superficie:</strong>
 								<p>36,938 km²</p>
 							</div>
 						</div>
 						<div class="detail-item">
-							<span class="icon">🚗</span>
 							<div>
 								<strong>Desde Lima:</strong>
 								<p>410 km - 8 horas en bus</p>
@@ -156,26 +155,40 @@ import turismo from '../assets/imagenes/turismo.webp';
 						</div>
 					</div>
 				</div>
-				<div class="about-image">
-					<div class="map-container-home">
-						<iframe
-							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d249561.32618183!2d-76.4232!3d-9.9306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c340c29eb7e9%3A0x4a9b7e3c3e5a6f8c!2sHu%C3%A1nuco%2C%20Per%C3%BA!5e0!3m2!1ses!2spe!4v1234567890"
-							width="100%"
-							height="100%"
-							style="border:0; border-radius: 12px;"
-							allowfullscreen=""
-							loading="lazy"
-							referrerpolicy="no-referrer-when-downgrade">
-						</iframe>
-						<div class="map-marker">
-							<span>📍</span>
-							<span class="marker-label">Huánuco, Perú</span>
-						</div>
-					</div>
-				</div>
-			</div>
+				                				<div class="about-image">
+				                					<div class="map-container-home">
+				                						<iframe
+				                							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d249561.32618183!2d-76.4232!3d-9.9306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c340c29eb7e9%3A0x4a9b7e3c3e5a6f8c!2sHu%C3%A1nuco%2C%20Per%C3%BA!5e0!3m2!1ses!2spe!4v1234567890"
+				                							width="100%"
+				                							height="100%"
+				                							style="border:0; border-radius: 12px;"
+				                							allowfullscreen=""
+				                							loading="lazy"
+				                							referrerpolicy="no-referrer-when-downgrade">
+				                						</iframe>
+				                						<div class="map-marker">
+				                							<span>📍</span>
+				                							<span class="marker-label">Huánuco, Perú</span>
+				                						</div>
+				                					</div>
+				                				</div>			</div>
 		</div>
 	</section>
+
+    <section class="reality-cta">
+        <video autoplay loop muted playsinline class="reality-video-bg">
+            <source src="/videos/vid_hco_realidad.mp4" type="video/mp4">
+            Tu navegador no soporta videos.
+        </video>
+        <div class="reality-overlay"></div>
+        <div class="container">
+            <div class="cta-content">
+                <h2>¿Conoces la realidad de Huánuco?</h2>
+                <p>Más allá de su belleza, Huánuco enfrenta desafíos urgentes que debemos conocer y enfrentar juntos.</p>
+                <a href="/realidad" class="btn-impact">Sección de Reflexion</a>
+            </div>
+        </div>
+    </section>
 </Layout>
 
 <script>
@@ -203,8 +216,11 @@ import turismo from '../assets/imagenes/turismo.webp';
 </script>
 
 <style>
+/* ==========================================================================
+   Map Section Styles
+   ========================================================================== */
 .map-section {
-	background: #f5f5f5;
+	background: #f1ffff;
 	position: relative;
 }
 
@@ -295,13 +311,12 @@ import turismo from '../assets/imagenes/turismo.webp';
 	padding: 5vh 0;
 }
 
-/* Puntos de viaje */
 .journey-point {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 1.2rem;
-	margin: 8vh 0;
+	margin: 6vh 0;
 	opacity: 0;
 	transform: translateY(50px) scale(0.9);
 	transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -314,7 +329,6 @@ import turismo from '../assets/imagenes/turismo.webp';
 	transform: translateY(0) scale(1);
 }
 
-/* Alternar posición izquierda-derecha */
 .journey-point:nth-child(odd) {
 	align-self: flex-start;
 	margin-left: 15%;
@@ -405,16 +419,28 @@ import turismo from '../assets/imagenes/turismo.webp';
 	transform: translateY(-3px);
 }
 
+/* ==========================================================================
+   About Section Styles
+   ========================================================================== */
 .about {
-	padding: 5rem 2rem;
-	background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
-	position: relative;
-	z-index: 10;
+    padding: 8rem 2rem;
+    position: relative;
+    background-image: url('/images/about.webp'); /* Direct URL to image in public folder */
+    background-size: 100% 110%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #ffffff;
 }
 
-.container {
-	max-width: 1200px;
-	margin: 0 auto;
+.about-overlay {
+ position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.389); 
+    z-index: 1;
 }
 
 .about-content {
@@ -422,6 +448,10 @@ import turismo from '../assets/imagenes/turismo.webp';
 	grid-template-columns: 1fr 1fr;
 	gap: 3rem;
 	align-items: stretch;
+}
+.about .container {
+    position: relative; 
+    z-index: 2; 
 }
 
 .about-text {
@@ -433,21 +463,23 @@ import turismo from '../assets/imagenes/turismo.webp';
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-height: 500px;
+	min-height: 400px;
 }
 
 .about-text h2 {
-	font-size: 2.5rem;
+	font-size: 48px;
 	margin-bottom: 1.5rem;
-	color: #2c5530;
+	color: #fafbeb;
 	font-weight: 700;
+	 text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8); 
 }
 
 .about-text p {
-	color: #5a6c57;
-	line-height: 1.8;
-	margin-bottom: 1.5rem;
-	font-size: 1.1rem;
+    color: #fffff1; 
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8); 
 }
 
 .location-details {
@@ -473,17 +505,19 @@ import turismo from '../assets/imagenes/turismo.webp';
 }
 
 .detail-item strong {
-	color: #2c5530;
+	color: #ffffff;
 	font-size: 0.95rem;
 	display: block;
 	margin-bottom: 0.3rem;
+	 text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8); 
 }
 
 .detail-item p {
-	color: #5a6c57;
+	color: #e0e0e0;
 	font-size: 1rem;
 	margin: 0;
 	line-height: 1.4;
+	 text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8); 
 }
 
 .map-container-home {
@@ -527,6 +561,154 @@ import turismo from '../assets/imagenes/turismo.webp';
 	letter-spacing: 0.5px;
 }
 
+/* ==========================================================================
+   Reality CTA Section Styles
+   ========================================================================== */
+.reality-cta {
+    position: relative;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    min-height: 68vh; 
+}
+
+.reality-video-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.reality-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.732);
+    z-index: 2;
+}
+
+.reality-cta .container {
+    position: relative;
+    z-index: 3;
+}
+
+.reality-cta::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: 
+		repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(220, 38, 38, 0.05) 10px, rgba(220, 38, 38, 0.05) 20px);
+	pointer-events: none;
+}
+
+.cta-content {
+	text-align: center;
+	max-width: 800px;
+	margin: 0 auto;
+	position: relative;
+	z-index: 2;
+}
+
+.cta-content h2 {
+	font-size: 3rem;
+	font-weight: 800;
+	color: #ffffff;
+	margin-bottom: 1.5rem;
+	letter-spacing: 2px;
+	text-shadow: 
+		0 0 30px rgba(220, 38, 38, 0.5),
+		0 0 60px rgba(16, 185, 129, 0.3),
+		3px 3px 10px rgba(0, 0, 0, 0.8);
+}
+
+.reality-cta .cta-content h2 {
+    font-size: 3rem;
+    color: #ffffff;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+}
+
+.cta-content p {
+	font-size: 1.4rem;
+	color: #e0e0e0;
+	line-height: 1.7;
+	margin-bottom: 2.5rem;
+	text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.reality-cta .cta-content p {
+    font-size: 1.25rem;
+    color: #e0f2fe;
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+}
+
+.btn-impact {
+    display: inline-block;
+    padding: 1.2rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-decoration: none;
+    color: #ffffff;
+    background: linear-gradient(135deg, #e74c3c 0%, #9d2f22df 100%);
+    border-radius: 50px;
+    box-shadow: 
+        0 10px 30px rgba(231, 76, 60, 0.5),
+        0 0 50px rgba(231, 76, 60, 0.3);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-impact::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-impact:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 
+        0 15px 40px rgba(231, 76, 60, 0.7),
+        0 0 70px rgba(231, 76, 60, 0.5);
+    border-color: #f1c40f;
+}
+
+.btn-impact:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+/* ==========================================================================
+   Generic & Utility Styles (can be moved to a global stylesheet)
+   ========================================================================== */
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
 .image-placeholder {
 	background: linear-gradient(135deg, #2c5530 0%, #4a7c4e 100%);
 	border-radius: 8px;
@@ -538,6 +720,15 @@ import turismo from '../assets/imagenes/turismo.webp';
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
+/* This was a stray rule from another file, can be removed if not used */
+.tip-card strong {
+    color: #58c170;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   Responsive Media Queries
+   ========================================================================== */
 @media (max-width: 1200px) {
 	.journey-point:nth-child(odd) {
 		margin-left: 10%;
@@ -624,6 +815,27 @@ import turismo from '../assets/imagenes/turismo.webp';
 	.map-container-home {
 		min-height: 400px;
 	}
+
+	.cta-content h2 {
+		font-size: 2rem;
+	}
+
+	.cta-content p {
+		font-size: 1.1rem;
+	}
+
+    .reality-cta .cta-content h2 {
+        font-size: 2rem;
+    }
+
+    .reality-cta .cta-content p {
+        font-size: 1.1rem;
+    }
+
+	.btn-impact {
+		padding: 1rem 2rem;
+		font-size: 1rem;
+	}
 }
 
 @media (max-width: 480px) {
@@ -636,6 +848,27 @@ import turismo from '../assets/imagenes/turismo.webp';
 		font-size: 0.9rem;
 		padding: 0.5rem 1.1rem;
 		letter-spacing: 1.5px;
+	}
+    
+    .cta-content h2 {
+		font-size: 1.6rem;
+	}
+
+	.cta-content p {
+		font-size: 1rem;
+	}
+
+    .reality-cta .cta-content h2 {
+        font-size: 1.6rem;
+    }
+
+    .reality-cta .cta-content p {
+        font-size: 1rem;
+    }
+
+	.btn-impact {
+		padding: 0.8rem 1.5rem;
+		font-size: 0.9rem;
 	}
 }
 </style>

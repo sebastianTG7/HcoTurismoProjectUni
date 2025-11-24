@@ -27,6 +27,7 @@ if (sessionCookie) {
                 <li><a href="/turismo">TURISMO</a></li>
                 <li><a href="/cultura">CULTURA</a></li>
 				<li><a href="/gastronomia">GASTRONOMÍA</a></li>
+				<li><a href="/realidad">REALIDAD NACIONAL</a></li>
                 <li><a href="/contacto">CONTACTO</a></li>
             </ul>
         </div>
@@ -38,7 +39,7 @@ if (sessionCookie) {
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
-                        <span class="welcome-text">Bienvenido </span><span class="user-name-text">{user.nombre}</span>
+                        <span class="user-name-text">{user.nombre}</span>
                         <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
@@ -106,6 +107,7 @@ if (sessionCookie) {
                     <li><a href="/turismo">TURISMO</a></li>
                     <li><a href="/cultura">CULTURA</a></li>
                     <li><a href="/gastronomia">GASTRONOMÍA</a></li>
+                    <li><a href="/realidad">REALIDAD NACIONAL</a></li>
                     <li><a href="/contacto" class="mobile-contact">CONTACTO</a></li>
                     <li class="menu-divider"></li>
                     <li><a href="#" id="logoutBtn" class="mobile-logout">CERRAR SESIÓN</a></li>
@@ -118,6 +120,7 @@ if (sessionCookie) {
                     <li><a href="/turismo">TURISMO</a></li>
                     <li><a href="/cultura">CULTURA</a></li>
                     <li><a href="/gastronomia">GASTRONOMÍA</a></li>
+                    <li><a href="/realidad">REALIDAD NACIONAL</a></li>
                     <li><a href="/contacto" class="mobile-contact">CONTACTO</a></li>
                     <li><a href="/login" class="mobile-login">INICIAR SESIÓN</a></li>
                 </>
@@ -713,9 +716,7 @@ nav {
     color: #3b82f6;
 }
 
-.welcome-text {
-    display: none;
-}
+.mobile-login {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.4));
     border: 1.5px solid rgba(16, 185, 129, 0.6);
     border-radius: 5px;
@@ -1366,10 +1367,6 @@ body.menu-open::before {
         gap: 6px;
         letter-spacing: 0.5px;
         max-width: 160px;
-    }
-
-    .welcome-text {
-        display: none;
     }
 
     .user-name-text {
